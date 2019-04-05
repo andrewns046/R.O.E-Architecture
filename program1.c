@@ -67,11 +67,11 @@ void fec_encode( void ) {
 
   //parity bits
   u_byte par_bit8 = xor_bits( new_mem1 );
-  u_byte par_bit4 = xor_bits( (mem0 << 3) | (mem0 >> 4) | (mem1) );
+  u_byte par_bit4 = xor_bits( (mem0 << 4) >> 1) | (mem0 >> 4) | (mem1) );
   u_byte par_bit2 = xor_bits( (mem0 << 4) | ((mem0 >> 4) >> 1) | (mem1 << 1));
   u_byte par_bit1 = xor_bits( (mem0 >> 4) | ( mem0 << 4) | (mem1 << 1) );
 
-  new_mem0 = ( (~par_bit8) + 0x01) | ((mem0 & 0x0E) << 3) |
+  new_mem0 = ( (par_bit8 << 4) << 4) | ((mem0 & 0x0E) << 3) |
              (par_bit4 << 4) | ((mem0 & 0x01) << 3) |
              (par_bit2 << 2) | (par_bit1);
 
