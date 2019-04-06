@@ -78,7 +78,18 @@ void fec_encode( void ) {
   printf("Encoding Results:\n\nmem[1]= 0x%.2X \nmem[0]= 0x%.2X", new_mem1, new_mem0);
 }
 
-/*XOR all bits in byte NOTE: it's communinative and associative*/
+void fec_corruptor( void ) {
+    
+    //TODO
+    
+}
+
+void fec_decoder ( void ) {
+    
+    
+    
+}
+/*XOR all bits in byte NOTE: it's communicative and associative*/
 u_byte xor_bits( u_byte byte ) {
   u_byte result = 0;
   while (byte) {
