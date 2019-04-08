@@ -12,7 +12,8 @@
 typedef unsigned char u_byte;
 
 #define MEM_SIZE 255
-#define UPPER_LIMIT 255
+#define ENCODE_MEM_SIZE 60
+#define K 30
 
 u_byte mem [MEM_SIZE];
 
@@ -26,8 +27,8 @@ int main( void ) {
   srand(time(0));
 
   fillMem();
-  printMem();
   fec_encode();
+  printMem();
   return 0;
 }
 
@@ -35,11 +36,11 @@ int main( void ) {
 void fillMem( void ) {
   int i;
 
-  for( i = 0; i < MEM_SIZE/2; i++)
-    mem[i] = rand() % (UPPER_LIMIT + 1);
+  for( i = 0; i < ENCODE_MEM_SIZE/2; i++)
+    mem[i] = rand() % (MEM_SIZE + 1);
 
   //pad odd [1-29] with 5 preceeding zeros
-  for( i = 1; i < MEM_SIZE/2; i+=2)
+  for( i = 1; i < ENCODE_MEM_SIZE/2; i+=2)
     mem[i] = mem[i]>>5;
 }
 
@@ -54,28 +55,32 @@ void printMem( void ) {
 
 /*Forward Error Code (encoding algorithm)*/
 void fec_encode( void ) {
-  //original memory
-  u_byte mem1 = 0x07;
-  u_byte mem0 = 0xEE;
+  int i;
 
-  //encoded memory
-  u_byte new_mem1 = 0x00;
-  u_byte new_mem0 = 0x00;
+  u_byte par_bit8;
+  u_byte par_bit4;
+  u_byte par_bit2;
+  u_byte par_bit1;
 
-  //fec encoding algorithm
-  new_mem1 = (mem1 << 4) | (mem0 >> 4);
+  for(i = 0; i < (ENCODE_MEM_SIZE/2); i++) {
+    //fec encoding algorithm
+    mem[i+K+1] = (mem[i+1] << 4) | (mem[i] >> 4);
 
-  //parity bits
-  u_byte par_bit8 = xor_bits( new_mem1 );
-  u_byte par_bit4 = xor_bits( (mem0 << 3) | (mem0 >> 4) | (mem1) );
-  u_byte par_bit2 = xor_bits( (mem0 << 4) | ((mem0 >> 4) >> 1) | (mem1 << 1));
-  u_byte par_bit1 = xor_bits( (mem0 >> 4) | ( mem0 << 4) | (mem1 << 1) );
+    par_bit8 = xor_bits( mem[i+K+1] );
+    par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) | (((mem[i] & 0x80) >> 4) >> 1) |
+                         (mem[i+1] << 4) );
+    par_bit2 = xor_bits( ((mem[i+1] & 0x06 ) << 4) |
+                         ((mem[i] & 0x60) >> 2) | ((mem[i] & 0x0C) >> 1) |
+                         (mem[i] & 0x01) );
+    par_bit1 = xor_bits( ((mem[i+1] & 0x04) << 4) |
+                         ((mem[i+1] & 0x01) << 5) | ((mem[i] & 0x40) >> 2) |
+                         ((mem[i] & 0x10) >> 1) | ((mem[i] & 0x08) >> 1) |
+                         (mem[i] & 0x03) );
 
-  new_mem0 = ( (~par_bit8) + 0x01) | ((mem0 & 0x0E) << 3) |
-             (par_bit4 << 4) | ((mem0 & 0x01) << 3) |
-             (par_bit2 << 2) | (par_bit1);
-
-  printf("Encoding Results:\n\nmem[1]= 0x%.2X \nmem[0]= 0x%.2X", new_mem1, new_mem0);
+    mem[i+K] = ( ((par_bit8 << 4) << 4) | ((mem[i] & 0x0E) << 3) |
+                                    (par_bit4 << 4) | ((mem[i] & 0x01) << 3) |
+                                    (par_bit2 << 2) | (par_bit1) );
+  }
 }
 
 void fec_corruptor( void ) {
