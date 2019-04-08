@@ -79,15 +79,20 @@ void fec_encode( void ) {
 }
 
 void fec_corruptor( void ) {
-    
+
     //TODO
-    
+
 }
 
 void fec_decoder ( void ) {
-    
-    
-    
+    u_byte encMem1 = 0x00
+    u_byte encMem0 = 0x00
+
+    u_byte decMem0 = 0x00
+    u_byte decMem1 = 0x00
+
+    u
+
 }
 /*XOR all bits in byte NOTE: it's communicative and associative*/
 u_byte xor_bits( u_byte byte ) {
