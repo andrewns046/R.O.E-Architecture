@@ -90,13 +90,29 @@ void fec_corruptor( void ) {
 }
 
 void fec_decoder ( void ) {
-    u_byte encMem1 = 0x00
-    u_byte encMem0 = 0x00
+    // this is correct
+    u_byte encMem1 = 0x1D
+    u_byte encMem0 = 0x4F
+
+    // this is corrupted
+//    u_byte encMem1 = 0x1D
+//    u_byte encMem0 = 0x4F
 
     u_byte decMem0 = 0x00
     u_byte decMem1 = 0x00
 
-    u
+    // Counter for error bits, lower 4 indicate error position after algorithm
+    u_byte err_pos = 0x00
+
+    // Get error bit with value d11^d10^d9^d8^d7^d6^d5^p8
+    // and add to position counter
+    u_byte err_bit8 = xor_bits(encMem1);
+    err_pos = err_pos^err_bit8;
+    err_pos = err_pos << 1;
+
+    // Get error bit with value d11^d10^d9^d8^d4^d3^d2^p4
+    // and add to position counter
+    err_bit4 =  xor_bits(((encMem1 >> 3) << 4 )|
 
 }
 /*XOR all bits in byte NOTE: it's communicative and associative*/
