@@ -28,10 +28,10 @@ int main( void ) {
   srand(time(0));
 
   fillMem();
-  // printf("Original memory: 0x%.2X%.2X\n", mem[1], mem[0]);
+  printf("Original memory: 0x%.2X%.2X\n", mem[1], mem[0]);
   fec_encode();
-  // printf("Encoded memory: 0x%.2X%.2X\n", mem[31], mem[30]);
-  printMem();
+  printf("Encoded memory: 0x%.2X%.2X\n", mem[31], mem[30]);
+  // printMem();
   fec_decode(2);
 
   return 0;
@@ -198,11 +198,11 @@ void fec_decode( int choice ) {
     //xors all bits to get error bit
     err_bit1 = xor_bits(err_bit1);
 
-    printf("Err_bit1: %i\n", err_bit1);
+    // printf("Err_bit1: %i\n", err_bit1);
 
     err_pos = err_pos^err_bit1;
 
-    printf("Error position: %i\n",err_pos);
+    // printf("Error position: %i\n",err_pos);
     // If there is an error, correct it before ripping out the data bits
     if(err_pos != 0){
       // Need to figure out way to determine if error position is in upper (gt 8)
