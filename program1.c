@@ -28,11 +28,12 @@ int main( void ) {
   srand(time(0));
 
   fillMem();
-  printf("Original memory: 0x%.2X%.2X\n", mem[1], mem[0]);
+  // printf("Original memory: 0x%.2X%.2X\n", mem[1], mem[0]);
   fec_encode();
-  printf("Encoded memory: 0x%.2X%.2X\n", mem[31], mem[30]);
-  // printMem();
+  // printf("Encoded memory: 0x%.2X%.2X\n", mem[31], mem[30]);
+  printMem();
   fec_decode(2);
+
   return 0;
 }
 
@@ -69,7 +70,6 @@ void fec_encode( void ) {
   for(i = 0; i < (ENCODE_MEM_SIZE/2); i = i + 2) {
     //fec encoding algorithm
     mem[i+K+1] = (mem[i+1] << 4) | (mem[i] >> 4);
-    printf("mem[%i] = %.2X = (%.2X << 4) | (%.2X >> 4)\n",i+K+1,mem[i+K+1],mem[i+1],mem[i]);
     par_bit8 = xor_bits( mem[i+K+1] );
     par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) | ((mem[i] & 0x80) >> 4) |
                          (mem[i+1] << 4) );
@@ -77,7 +77,7 @@ void fec_encode( void ) {
                          ((mem[i] & 0x60) >> 1) | (mem[i] & 0x0D));
     par_bit1 = xor_bits( ((mem[i+1] & 0x04) << 5) |
                          ((mem[i+1] & 0x01) << 6) | ((mem[i] & 0x40) >> 1) |
-                         (mem[i] & 0x10) | (mem[i] & 0x0D));
+                         (mem[i] & 0x10) | (mem[i] & 0x0B));
 
     mem[i+K] = ( ((par_bit8 << 4) << 3) | ((mem[i] & 0x0E) << 3) |
                                     (par_bit4 << 3) | ((mem[i] & 0x01) << 2) |
@@ -123,43 +123,78 @@ void fec_decode( int choice ) {
     // Get error bit 8 with value d11^d10^d9^d8^d7^d6^d5^p8
     // and add to position counter
     u_byte err_bit8 = xor_bits((encMem1 << 1) | (encMem0 >> 7));
-    printf("Err_bit8: %i\n", err_bit8);
+    // printf("Err_bit8: %i\n", err_bit8);
     err_pos = err_pos^err_bit8;
     err_pos = err_pos << 1;
 
     // Get error bit 4 with value d11^d10^d9^d8^d4^d3^d2^p4
     // and add to position counter
-    u_byte err_bit4 =  xor_bits(((encMem1 >> 3) << 4 )|((encMem0 << 1) >> 4));
-    printf("Err_bit4: %i\n", err_bit4);
+    u_byte err_bit4 =  xor_bits(((encMem1 >> 3) << 4 )|((encMem0 & 0x7F) >> 3));
+    // printf("Err_bit4: %i\n", err_bit4);
     err_pos = err_pos^err_bit4;
     err_pos = err_pos << 1;
 
     // Get error bit 2 with value d11^d10^d7^d6^d4^d3^d1^p2
     u_byte err_bit2 = xor_bits(((encMem1 & 0x60) << 1)|((encMem1 & 0x06) << 3)|
-                              ((encMem0 & 0x60) >> 2)|((encMem0 & 0x06) >> 1));
-    printf("Err_bit2: %i\n", err_bit2);
+                              ((encMem0 & 0x60) >> 3)|((encMem0 & 0x06) >> 1));
+
+    // printf("Err_bit2: %i\n", err_bit2);
     err_pos = err_pos^err_bit2;
     err_pos = err_pos << 1;
 
     // Get error bit 1 with value d11^d9^d7^d5^d4^d2^d1^p1
     // Trying different strategy without masks
     u_byte err_bit1 = 0x00;
+    //temp variable to avoid C implicit cast
+    u_byte temp = 0x00;
     //places d11
     err_bit1 = err_bit1 | ((encMem1 >> 6) << 7);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
     //places d9
-    err_bit1 = err_bit1 | (((encMem1 >> 4) << 7) >> 1);
+    // Need to store result of this shift before shifting right, because
+    // C will implicitly cast to an int and keep the upper bits we want
+    // to shear off.
+    temp = ((encMem1 >> 4) << 7);
+    err_bit1 = err_bit1 | ( temp >> 1);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
+
     //places d7
-    err_bit1 = err_bit1 | (((encMem1 >> 2) << 7) >> 2);
+    // Same issue as before
+    temp = ((encMem1 >> 2) << 7);
+    err_bit1 = err_bit1 | ( temp >> 2);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
+
     //places d5
-    err_bit1 = err_bit1 | ((encMem1 << 7) >> 3);
+    // Same issue as before
+    temp = (encMem1 << 7);
+    err_bit1 = err_bit1 | ( temp >> 3);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
+
     //places d4
-    err_bit1 = err_bit1 | (((encMem0 << 1) >> 7) << 3);
+    // Same issue as before
+    // Bugged?
+    temp = (encMem0 << 1);
+    err_bit1 = err_bit1 | (( temp >> 7) << 3);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
+
     //places d2
-    err_bit1 = err_bit1 | (((encMem0 << 3) >> 7) << 2);
+    // Same issue as before
+    temp = (encMem0 << 3);
+    err_bit1 = err_bit1 | (( temp >> 7) << 2);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
+
     //places d1
-    err_bit1 = err_bit1 | (((encMem0 << 5) >> 7) << 1);
+    // Same issue as before
+    temp = (encMem0 << 5);
+    err_bit1 = err_bit1 | (( temp >> 7) << 1);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
+
     //places p1
-    err_bit1 = err_bit1 | ((encMem0 << 7) >> 7);
+    // Same issue as before
+    temp = (encMem0 << 7);
+    err_bit1 = err_bit1 | ( temp >> 7);
+    // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
+
     //xors all bits to get error bit
     err_bit1 = xor_bits(err_bit1);
 
@@ -203,10 +238,14 @@ void fec_decode( int choice ) {
     decMem0 = decMem0 | (encMem1 << 4);
 
     // Places d4 d3 d2 0 in lower 4 bits of lower byte
-    decMem0 = decMem0 | (((encMem0 << 1) >> 5) << 1);
+    // Same issue with shifting as before
+    temp = (encMem0 << 1);
+    decMem0 = decMem0 | ((temp >> 5) << 1);
 
     // Places d1 in LSB of lower byte
-    decMem0 = decMem0 | ((encMem0 << 5) >> 7);
+    // Same issue with shifting as before
+    temp = (encMem0 << 5);
+    decMem0 = decMem0 | (temp >> 7);
 
     // Now decMem1 decMem0 should be the original data, print test
     printf("Decoded memory: 0x%.2X%.2X\n", decMem1, decMem0);
