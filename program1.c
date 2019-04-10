@@ -20,7 +20,8 @@ u_byte mem [MEM_SIZE];
 void fillMem( void );
 void printMem( void );
 void fec_encode( void );
-void fec_decode( void );
+void fec_decode( u_byte use_corrupted_memory );
+void fec_corruptor( void );
 u_byte xor_bits( u_byte );
 void checkMem( void );
 
@@ -30,7 +31,8 @@ int main( void ) {
 
   fillMem();
   fec_encode();
-  fec_decode();
+  fec_corruptor();
+  fec_decode( 1 );
   printMem();
   checkMem();
   return 0;
@@ -85,21 +87,48 @@ void fec_encode( void ) {
 }
 
 void fec_corruptor( void ) {
+    int i;
+    int corrupted_start_mem = 64;
+    for(i = 0; i < (ENCODE_MEM_SIZE/2); i = i + 2){
+      u_byte encMem1 = mem[i+1+K];
+      u_byte encMem0 = mem[i+K];
 
-    //TODO
+      u_byte corMem1;
+      u_byte corMem0;
+
+      int cor_pos = rand() % 15;
+      if(cor_pos > 7){
+        corMem1 = encMem1 ^ (0x01 << cor_pos - 8);
+        corMem0 = encMem0;
+        mem[corrupted_start_mem + i + 1] = corMem1;
+        mem[corrupted_start_mem + i] = corMem0;
+      } else {
+        corMem1 = encMem1;
+        corMem0 = encMem0  ^ (0x01 << cor_pos);
+        mem[corrupted_start_mem + i + 1] = corMem1;
+        mem[corrupted_start_mem + i] = corMem0;
+      }
+    }
 
 }
 
-void fec_decode( void ) {
+void fec_decode( u_byte use_corrupted_memory ) {
 
     u_byte encMem1;
     u_byte encMem0;
     int i;
     int decoded_mem_start_offset = 94;
 
+    int encoded_mem_start_offset;
+    if(use_corrupted_memory){
+      encoded_mem_start_offset = 64;
+    } else {
+      encoded_mem_start_offset = K;
+    }
+
     for(i = 0; i < (ENCODE_MEM_SIZE/2); i = i + 2){
-        encMem1 = mem[i+1+K];
-        encMem0 = mem[i+K];
+        encMem1 = mem[i+1+encoded_mem_start_offset];
+        encMem0 = mem[i+encoded_mem_start_offset];
         u_byte decMem0 = 0x00;
         u_byte decMem1 = 0x00;
 
@@ -109,14 +138,12 @@ void fec_decode( void ) {
         // Get error bit 8 with value d11^d10^d9^d8^d7^d6^d5^p8
         // and add to position counter
         u_byte err_bit8 = xor_bits((encMem1 << 1) | (encMem0 >> 7));
-        // printf("Err_bit8: %i\n", err_bit8);
         err_pos = err_pos^err_bit8;
         err_pos = err_pos << 1;
 
         // Get error bit 4 with value d11^d10^d9^d8^d4^d3^d2^p4
         // and add to position counter
         u_byte err_bit4 =  xor_bits(((encMem1 >> 3) << 4 )|((encMem0 & 0x7F) >> 3));
-        // printf("Err_bit4: %i\n", err_bit4);
         err_pos = err_pos^err_bit4;
         err_pos = err_pos << 1;
 
@@ -124,7 +151,6 @@ void fec_decode( void ) {
         u_byte err_bit2 = xor_bits(((encMem1 & 0x60) << 1)|((encMem1 & 0x06) << 3)|
                                   ((encMem0 & 0x60) >> 3)|((encMem0 & 0x06) >> 1));
 
-        // printf("Err_bit2: %i\n", err_bit2);
         err_pos = err_pos^err_bit2;
         err_pos = err_pos << 1;
 
@@ -135,65 +161,54 @@ void fec_decode( void ) {
         u_byte temp = 0x00;
         //places d11
         err_bit1 = err_bit1 | ((encMem1 >> 6) << 7);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
         //places d9
         // Need to store result of this shift before shifting right, because
         // C will implicitly cast to an int and keep the upper bits we want
         // to shear off.
         temp = ((encMem1 >> 4) << 7);
         err_bit1 = err_bit1 | ( temp >> 1);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
 
         //places d7
         // Same issue as before
         temp = ((encMem1 >> 2) << 7);
         err_bit1 = err_bit1 | ( temp >> 2);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
 
         //places d5
         // Same issue as before
         temp = (encMem1 << 7);
         err_bit1 = err_bit1 | ( temp >> 3);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
 
         //places d4
         // Same issue as before
         // Bugged?
         temp = (encMem0 << 1);
         err_bit1 = err_bit1 | (( temp >> 7) << 3);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
 
         //places d2
         // Same issue as before
         temp = (encMem0 << 3);
         err_bit1 = err_bit1 | (( temp >> 7) << 2);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
 
         //places d1
         // Same issue as before
         temp = (encMem0 << 5);
         err_bit1 = err_bit1 | (( temp >> 7) << 1);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
 
         //places p1
         // Same issue as before
         temp = (encMem0 << 7);
         err_bit1 = err_bit1 | ( temp >> 7);
-        // printf("Error bit before XOR: 0x%.2X\n",err_bit1);
 
         //xors all bits to get error bit
         err_bit1 = xor_bits(err_bit1);
 
-        // printf("Err_bit1: %i\n", err_bit1);
 
         err_pos = err_pos^err_bit1;
 
-        // printf("Error position: %i\n",err_pos);
         // If there is an error, correct it before ripping out the data bits
         if(err_pos != 0){
           // Need to figure out way to determine if error position is in upper (gt 8)
           // or in lower (lte 8) byte
-
           // Adjust err_pos for binary location (0 index)
           err_pos = err_pos - 1;
 
@@ -234,7 +249,6 @@ void fec_decode( void ) {
         decMem0 = decMem0 | (temp >> 7);
 
         // Now decMem1 decMem0 should be the original data, print test
-        printf("Decoded memory: 0x%.2X%.2X\n", decMem1, decMem0);
         mem[decoded_mem_start_offset + i + 1] = decMem1;
         mem[decoded_mem_start_offset + i] = decMem0;
     }
