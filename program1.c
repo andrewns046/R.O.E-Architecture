@@ -38,7 +38,7 @@ int bits_to_buf( char *, int );
 int fill_mem( void );
 int checkMem( void );
 
-int main(int argc, char * argv[] ) {
+int main( int argc, char* argv[]) {
   int errors;
   fill_mem();
   fec_encode();
@@ -110,13 +110,13 @@ void fec_corruptor( void ) {
 
       corr_mem[i+1] = corMem1 ^ encMem1;
       corr_mem[i] = corMem0 ^ encMem0;
-
     }
 }
 
 /* Compares test bench memory with memory our algorithms generated*/
-int checkMem( void ) {
+int checkMem( void ){
   int i, num_errs = 0;
+
   printf("\n**************\nError Summary\n**************\n");
   for( i < 0; i < MEM_SIZE; i++) {
     if( mem[i] != tb_mem[i] ) {
@@ -124,7 +124,6 @@ int checkMem( void ) {
       num_errs++;
     }
   }
-  return num_errs;
 }
 
 void fec_decode( u_byte use_corrupted_memory ) {
@@ -136,11 +135,137 @@ void fec_decode( u_byte use_corrupted_memory ) {
 
     int decoded_mem_start_offset = 2*PART_SIZE;
     u_byte * memory = mem;
-    if(use_corrupted_memory) {
+    if(use_corrupted_memory){
         memory = corr_mem;
         encoded_mem_start_offset = 0;
     }
+    
+    for(i = 0; i < PART_SIZE; i = i + 2){
+        encMem1 = memory[i+1+encoded_mem_start_offset];
+        encMem0 = memory[i+encoded_mem_start_offset];
+        u_byte decMem0 = 0x00;
+        u_byte decMem1 = 0x00;
 
+        // Counter for error bits, lower 4 indicate error position after algorithm
+        u_byte err_pos = 0x00;
+
+        // Get error bit 8 with value d11^d10^d9^d8^d7^d6^d5^p8
+        // and add to position counter
+        u_byte err_bit8 = xor_bits((encMem1 << 1) | (encMem0 >> 7));
+        err_pos = err_pos^err_bit8;
+        err_pos = err_pos << 1;
+
+        // Get error bit 4 with value d11^d10^d9^d8^d4^d3^d2^p4
+        // and add to position counter
+        u_byte err_bit4 =  xor_bits(((encMem1 >> 3) << 4 )|((encMem0 & 0x7F) >> 3));
+        err_pos = err_pos^err_bit4;
+        err_pos = err_pos << 1;
+
+        // Get error bit 2 with value d11^d10^d7^d6^d4^d3^d1^p2
+        u_byte err_bit2 = xor_bits(((encMem1 & 0x60) << 1)|((encMem1 & 0x06) << 3)|
+                                  ((encMem0 & 0x60) >> 3)|((encMem0 & 0x06) >> 1));
+
+        err_pos = err_pos^err_bit2;
+        err_pos = err_pos << 1;
+
+        // Get error bit 1 with value d11^d9^d7^d5^d4^d2^d1^p1
+        // Trying different strategy without masks
+        u_byte err_bit1 = 0x00;
+        //temp variable to avoid C implicit cast
+        u_byte temp = 0x00;
+        //places d11
+        err_bit1 = err_bit1 | ((encMem1 >> 6) << 7);
+        //places d9
+        // Need to store result of this shift before shifting right, because
+        // C will implicitly cast to an int and keep the upper bits we want
+        // to shear off.
+        temp = ((encMem1 >> 4) << 7);
+        err_bit1 = err_bit1 | ( temp >> 1);
+
+        //places d7
+        // Same issue as before
+        temp = ((encMem1 >> 2) << 7);
+        err_bit1 = err_bit1 | ( temp >> 2);
+
+        //places d5
+        // Same issue as before
+        temp = (encMem1 << 7);
+        err_bit1 = err_bit1 | ( temp >> 3);
+
+        //places d4
+        // Same issue as before
+        // Bugged?
+        temp = (encMem0 << 1);
+        err_bit1 = err_bit1 | (( temp >> 7) << 3);
+
+        //places d2
+        // Same issue as before
+        temp = (encMem0 << 3);
+        err_bit1 = err_bit1 | (( temp >> 7) << 2);
+
+        //places d1
+        // Same issue as before
+        temp = (encMem0 << 5);
+        err_bit1 = err_bit1 | (( temp >> 7) << 1);
+
+        //places p1
+        // Same issue as before
+        temp = (encMem0 << 7);
+        err_bit1 = err_bit1 | ( temp >> 7);
+
+        //xors all bits to get error bit
+        err_bit1 = xor_bits(err_bit1);
+
+
+        err_pos = err_pos^err_bit1;
+
+        // If there is an error, correct it before ripping out the data bits
+        if(err_pos != 0){
+          // Need to figure out way to determine if error position is in upper (gt 8)
+          // or in lower (lte 8) byte
+          // Adjust err_pos for binary location (0 index)
+          err_pos = err_pos - 1;
+
+          // Subtract 8 from err_pos
+          err_pos = err_pos - 8;
+
+          // Now the error position overflows if it was between 8 and 1 originally
+          // and does not if it was between 15 and 9
+          u_byte byte_determiner = err_pos & 0x80;
+          byte_determiner = byte_determiner >> 7;
+
+          // Should be 1 if lower byte, 0 if upper
+          if(byte_determiner != 0){
+            err_pos = err_pos + 8;
+            u_byte err_mask = 0x1 << err_pos;
+            encMem0 = encMem0 ^ err_mask;
+          } else {
+            u_byte err_mask = 0x1 << err_pos;
+            encMem1 = encMem1 ^ err_mask;
+          }
+        }
+
+        // Now comes stitching the data back together
+        // Places 0 0 0 0 0 d11 d10 d9 in decMem1
+        decMem1 = decMem1 | (encMem1 >> 4);
+
+        // Places d8 d7 d6 d5 in upper 4 bits of lower byte
+        decMem0 = decMem0 | (encMem1 << 4);
+
+        // Places d4 d3 d2 0 in lower 4 bits of lower byte
+        // Same issue with shifting as before
+        temp = (encMem0 << 1);
+        decMem0 = decMem0 | ((temp >> 5) << 1);
+
+        // Places d1 in LSB of lower byte
+        // Same issue with shifting as before
+        temp = (encMem0 << 5);
+        decMem0 = decMem0 | (temp >> 7);
+
+        // Now decMem1 decMem0 should be the original data, print test
+        mem[decoded_mem_start_offset + i + 1] = decMem1;
+        mem[decoded_mem_start_offset+ i] = decMem0;
+    }
 }
 
 /*XOR all bits in byte NOTE: it's communicative and associative*/
