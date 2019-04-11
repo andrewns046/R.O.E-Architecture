@@ -15,15 +15,10 @@ typedef unsigned char u_byte;
 #define TRANS_BITS 15  // bits transmitted (word + parity)
 #define MEM_SIZE 256
 #define PART_SIZE 100  // partition size
-#define BYTE_MAX 255
+#define BYTE_MAX 256
+#define ENCODE_MEM_SIZE 60
 
 u_byte mem [MEM_SIZE];
-
-/* values read from test bench
-u_byte d_in[PART_SIZE];
-u_byte d_out[PART_SIZE];
-u_byte d_sent[PART_SIZE];
-u_byte corr[PART_SIZE]; */
 u_byte tb_mem [MEM_SIZE];
 
 void printMem( void );
@@ -33,6 +28,7 @@ void fec_corruptor( void );
 u_byte xor_bits( u_byte );
 int bits_to_buf( char *, int );
 int fill_mem( void );
+void checkMem( void );
 
 int main( void ) {
   fill_mem();
