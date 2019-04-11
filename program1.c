@@ -13,7 +13,7 @@ typedef unsigned char u_byte;
 
 #define DATA_BITS 11  // number of bits in one word
 #define TRANS_BITS 15  // bits transmitted (word + parity)
-#define MEM_SIZE 256
+#define MEM_SIZE 300
 #define PART_SIZE 100  // partition size
 #define BYTE_MAX 256
 #define ENCODE_MEM_SIZE 60
@@ -22,6 +22,7 @@ typedef unsigned char u_byte;
 u_byte mem [MEM_SIZE];
 u_byte tb_mem [MEM_SIZE];
 u_byte corr[PART_SIZE];
+u_byte corr_mem[PART_SIZE];
 
 void printMem( void );
 void fec_encode( void );
@@ -30,20 +31,14 @@ void fec_corruptor( void );
 u_byte xor_bits( u_byte );
 int bits_to_buf( char *, int );
 int fill_mem( void );
-void checkMem( void );
 
-int main( void ) {
+int main( int argc, char * argv[] ) {
   fill_mem();
   fec_encode();
-<<<<<<< HEAD
-  //fec_corruptor();
-  //fec_decode( 1 );
-=======
-  // fec_corruptor();
-  // fec_decode( 1 );
->>>>>>> 81fbff59489e8180056ef005c0cfeb317907a7a2
+  fec_corruptor();
+  fec_decode( atoi(argv[1]) );
   printMem();
-  checkMem();
+
   return 0;
 }
 
@@ -64,6 +59,7 @@ void printMem( void ) {
   printf("=========================\n");
   for( i = (PART_SIZE - 1); i >= 0; i--)
       printf("corr[%d] = 0x%.2X\n", i, corr[i]);
+
 }
 
 /*Forward Error Code (encoding algorithm)*/
@@ -94,26 +90,16 @@ void fec_encode( void ) {
 
 void fec_corruptor( void ) {
     int i;
-    int corrupted_start_mem = 64;
-    for(i = 0; i < (ENCODE_MEM_SIZE/2); i = i + 2){
-      u_byte encMem1 = mem[i+1+K];
-      u_byte encMem0 = mem[i+K];
+    for(i = 0; i < PART_SIZE; i = i + 2){
+      u_byte encMem1 = mem[i+PART_SIZE+1];
+      u_byte encMem0 = mem[i+PART_SIZE];
 
-      u_byte corMem1;
-      u_byte corMem0;
+      u_byte corMem1 = corr[i+1];
+      u_byte corMem0 = corr[i];
 
-      int cor_pos = rand() % 15;
-      if(cor_pos > 7){
-        corMem1 = encMem1 ^ (0x01 << cor_pos - 8);
-        corMem0 = encMem0;
-        mem[corrupted_start_mem + i + 1] = corMem1;
-        mem[corrupted_start_mem + i] = corMem0;
-      } else {
-        corMem1 = encMem1;
-        corMem0 = encMem0  ^ (0x01 << cor_pos);
-        mem[corrupted_start_mem + i + 1] = corMem1;
-        mem[corrupted_start_mem + i] = corMem0;
-      }
+      corr_mem[i+1] = corMem1 ^ encMem1;
+      corr_mem[i] = corMem0 ^ encMem0;
+
     }
 
 }
@@ -123,18 +109,18 @@ void fec_decode( u_byte use_corrupted_memory ) {
     u_byte encMem1;
     u_byte encMem0;
     int i;
-    int decoded_mem_start_offset = 94;
+    int encoded_mem_start_offset = PART_SIZE;
 
-    int encoded_mem_start_offset;
+    int decoded_mem_start_offset = 2*PART_SIZE;
+    u_byte * memory = mem;
     if(use_corrupted_memory){
-      encoded_mem_start_offset = 64;
-    } else {
-      encoded_mem_start_offset = K;
+        memory = corr_mem;
+        encoded_mem_start_offset = 0;
     }
 
-    for(i = 0; i < (ENCODE_MEM_SIZE/2); i = i + 2){
-        encMem1 = mem[i+1+encoded_mem_start_offset];
-        encMem0 = mem[i+encoded_mem_start_offset];
+    for(i = 0; i < PART_SIZE; i = i + 2){
+        encMem1 = memory[i+1+encoded_mem_start_offset];
+        encMem0 = memory[i+encoded_mem_start_offset];
         u_byte decMem0 = 0x00;
         u_byte decMem1 = 0x00;
 
@@ -256,23 +242,11 @@ void fec_decode( u_byte use_corrupted_memory ) {
 
         // Now decMem1 decMem0 should be the original data, print test
         mem[decoded_mem_start_offset + i + 1] = decMem1;
-        mem[decoded_mem_start_offset + i] = decMem0;
+        mem[decoded_mem_start_offset+ i] = decMem0;
     }
 
 }
 
-void checkMem( void ){
-  int i;
-  int decoded_mem_start_offset = 94;
-  for(i = 0; i < (ENCODE_MEM_SIZE/2); i = i + 2){
-    if(mem[i+1] != mem[decoded_mem_start_offset + 1 + i] || mem[i] != mem[decoded_mem_start_offset + i]){
-      printf("Some decoded memory did not match the original memory: i = %i!\n",i);
-      return;
-    }
-  }
-  printf("Everything looks good my dude\n");
-  return;
-}
 /*XOR all bits in byte NOTE: it's communicative and associative*/
 u_byte xor_bits( u_byte byte ) {
   u_byte result = 0;
