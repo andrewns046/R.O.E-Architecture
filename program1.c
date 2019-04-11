@@ -47,8 +47,9 @@ int main( int argc, char* argv[]) {
   if( (errors = checkMem()) > 0 ) {
     fprintf(stderr ,"\nNum Errors: %d", errors);
   } else {
-    printf("\nNum Errors: %d\tAll Tests Passed!", errors);
+    printf("\nNum Errors: %d\tAll Tests Passed!\n", errors);
   }
+
   return 0;
 }
 
@@ -118,12 +119,14 @@ int checkMem( void ){
   int i, num_errs = 0;
 
   printf("\n**************\nError Summary\n**************\n");
-  for( i < 0; i < MEM_SIZE; i++) {
+  for( i = 0; i < MEM_SIZE; i++) {
     if( mem[i] != tb_mem[i] ) {
       fprintf( stderr, "Error at mem[%d]\tresult: 0x%.2X\texpected: 0x%.2X\n", i, mem[i], tb_mem[i]);
       num_errs++;
     }
   }
+
+  return num_errs;
 }
 
 void fec_decode( u_byte use_corrupted_memory ) {
@@ -139,7 +142,7 @@ void fec_decode( u_byte use_corrupted_memory ) {
         memory = corr_mem;
         encoded_mem_start_offset = 0;
     }
-    
+
     for(i = 0; i < PART_SIZE; i = i + 2){
         encMem1 = memory[i+1+encoded_mem_start_offset];
         encMem0 = memory[i+encoded_mem_start_offset];
@@ -379,6 +382,7 @@ int bits_to_buf( char * bit_str, int indx) {
   // fill corrupted bits buffer
   corr[indx] = mem0;
   corr[indx+1] = mem1;
+  mem0=mem1=0x00;
 
   // decoded conversion
   for(n = 44; n < 47; n++) {
