@@ -30,8 +30,6 @@ u_byte corr[PART_SIZE];
 
 void printMem( void );
 void fec_encode( void );
-void fec_decode( u_byte use_corrupted_memory );
-void fec_corruptor( void );
 u_byte xor_bits( u_byte );
 int bits_to_buf( char *, int );
 int fill_mem( void );
@@ -90,11 +88,6 @@ void fec_encode( void ) {
   }
 }
 
-void fec_corruptor( void ) {
-}
-
-void fec_decode( u_byte use_corrupted_memory ) {
-}
 
 /* Compares test bench memory with memory our algorithms generated*/
 int checkMem( void ){
