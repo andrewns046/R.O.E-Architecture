@@ -35,8 +35,13 @@ void checkMem( void );
 int main( void ) {
   fill_mem();
   fec_encode();
+<<<<<<< HEAD
   //fec_corruptor();
   //fec_decode( 1 );
+=======
+  // fec_corruptor();
+  // fec_decode( 1 );
+>>>>>>> 81fbff59489e8180056ef005c0cfeb317907a7a2
   printMem();
   checkMem();
   return 0;
@@ -70,25 +75,20 @@ void fec_encode( void ) {
   u_byte par_bit2;
   u_byte par_bit1;
 
-  for(i = 0; i < PART_SIZE; i += 2) {
-
+  for(i = 0; i < PART_SIZE; i = i + 2) {
     //fec encoding algorithm
-    mem[i+PART_SIZE+1] = ( mem[i+1] << 4) | (mem[i] >> 4);
-
+    mem[i+PART_SIZE+1] = (mem[i+1] << 4) | (mem[i] >> 4);
     par_bit8 = xor_bits( mem[i+PART_SIZE+1] );
-    par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) | (((mem[i] & 0x80) >> 4) >> 1) |
+    par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) | ((mem[i] & 0x80) >> 4) |
                          (mem[i+1] << 4) );
-    par_bit2 = xor_bits( ((mem[i+1] & 0x06 ) << 4) |
-                         ((mem[i] & 0x60) >> 2) | ((mem[i] & 0x0C) >> 1) |
-                         (mem[i] & 0x01) );
-    par_bit1 = xor_bits( ((mem[i+1] & 0x04) << 4) |
-                         ((mem[i+1] & 0x01) << 5) | ((mem[i] & 0x40) >> 2) |
-                         ((mem[i] & 0x10) >> 1) | ((mem[i] & 0x08) >> 1) |
-                         (mem[i] & 0x03) );
-
-    mem[i+PART_SIZE] = ( ((par_bit8 << 4) << 4) | ((mem[i] & 0x0E) << 3) |
-                                    (par_bit4 << 4) | ((mem[i] & 0x01) << 3) |
-                                    (par_bit2 << 2) | (par_bit1) );
+    par_bit2 = xor_bits( ((mem[i+1] & 0x06 ) << 5) |
+                         ((mem[i] & 0x60) >> 1) | (mem[i] & 0x0D));
+    par_bit1 = xor_bits( ((mem[i+1] & 0x04) << 5) |
+                         ((mem[i+1] & 0x01) << 6) | ((mem[i] & 0x40) >> 1) |
+                         (mem[i] & 0x10) | (mem[i] & 0x0B));
+    mem[i+PART_SIZE] = ( ((par_bit8 << 4) << 3) | ((mem[i] & 0x0E) << 3) |
+                                    (par_bit4 << 3) | ((mem[i] & 0x01) << 2) |
+                                    (par_bit2 << 1) | (par_bit1) );
   }
 }
 
