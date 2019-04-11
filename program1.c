@@ -21,6 +21,7 @@ typedef unsigned char u_byte;
 
 u_byte mem [MEM_SIZE];
 u_byte tb_mem [MEM_SIZE];
+u_byte corr[PART_SIZE];
 
 void printMem( void );
 void fec_encode( void );
@@ -34,8 +35,8 @@ void checkMem( void );
 int main( void ) {
   fill_mem();
   fec_encode();
-  fec_corruptor();
-  fec_decode( 1 );
+  //fec_corruptor();
+  //fec_decode( 1 );
   printMem();
   checkMem();
   return 0;
@@ -53,6 +54,11 @@ void printMem( void ) {
   printf("=========================\n");
   for( i = (MEM_SIZE - 1); i >= 0; i--)
       printf("tb_mem[%d] = 0x%.2X\n", i, tb_mem[i]);
+
+  printf("\nCorruption\n");
+  printf("=========================\n");
+  for( i = (PART_SIZE - 1); i >= 0; i--)
+      printf("corr[%d] = 0x%.2X\n", i, corr[i]);
 }
 
 /*Forward Error Code (encoding algorithm)*/
@@ -333,7 +339,7 @@ int bits_to_buf( char * bit_str, int indx) {
 
   mem0 = mem1 = 0x00;
 
-  //data_sent
+  // data_sent conversion
   for( n = 12; n < 19; n++) {
     if( bit_str[n] == '1' ) {
       mem1 = (mem1 | 0x01);
@@ -353,6 +359,28 @@ int bits_to_buf( char * bit_str, int indx) {
 
   tb_mem[indx+100] = mem0;
   tb_mem[indx+100+1] = mem1;
+  mem0 = mem1 = 0x00;
+
+  // corruption conversion
+  for( n = 28; n < 35; n++) {
+    if( bit_str[n] == '1' ) {
+      mem1 = (mem1 | 0x01);
+    }
+    if( n < 34 ) {
+      mem1 <<= 1;
+    }
+  }
+  for(n = 35; n < 43; n++) {
+    if( bit_str[n] == '1' ) {
+      mem0 = (mem0 | 0x01);
+    }
+    if( n < 42 ) {
+      mem0 <<= 1;
+    }
+  }
+
+  corr[indx] = mem0;
+  corr[indx+1] = mem1;
 
   return n;
 }
