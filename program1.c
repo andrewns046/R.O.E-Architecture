@@ -27,18 +27,23 @@ typedef unsigned char u_byte;
 u_byte mem [MEM_SIZE];
 u_byte tb_mem [MEM_SIZE];
 u_byte corr[PART_SIZE];
+u_byte corr_mem[PART_SIZE];
 
 void printMem( void );
 void fec_encode( void );
+void fec_corruptor( void );
+void fec_decode( u_byte );
 u_byte xor_bits( u_byte );
 int bits_to_buf( char *, int );
 int fill_mem( void );
 int checkMem( void );
 
-int main( void ) {
+int main(int argc, char * argv[] ) {
   int errors;
   fill_mem();
   fec_encode();
+  fec_corruptor();
+  fec_decode( atoi(argv[1]) );
   if( (errors = checkMem()) > 0 ) {
     fprintf(stderr ,"\nNum Errors: %d", errors);
   } else {
@@ -59,6 +64,12 @@ void printMem( void ) {
   printf("=========================\n");
   for( i = (MEM_SIZE - 1); i >= 0; i--)
       printf("tb_mem[%d] = 0x%.2X\n", i, tb_mem[i]);
+
+  printf("\nCorruption\n");
+  printf("=========================\n");
+  for( i = (PART_SIZE - 1); i >= 0; i--)
+      printf("corr[%d] = 0x%.2X\n", i, corr[i]);
+
 }
 
 /*Forward Error Code (encoding algorithm)*/
@@ -88,11 +99,24 @@ void fec_encode( void ) {
   }
 }
 
+void fec_corruptor( void ) {
+    int i;
+    for(i = 0; i < PART_SIZE; i = i + 2){
+      u_byte encMem1 = mem[i+PART_SIZE+1];
+      u_byte encMem0 = mem[i+PART_SIZE];
+
+      u_byte corMem1 = corr[i+1];
+      u_byte corMem0 = corr[i];
+
+      corr_mem[i+1] = corMem1 ^ encMem1;
+      corr_mem[i] = corMem0 ^ encMem0;
+
+    }
+}
 
 /* Compares test bench memory with memory our algorithms generated*/
-int checkMem( void ){
+int checkMem( void ) {
   int i, num_errs = 0;
-
   printf("\n**************\nError Summary\n**************\n");
   for( i < 0; i < MEM_SIZE; i++) {
     if( mem[i] != tb_mem[i] ) {
@@ -100,8 +124,22 @@ int checkMem( void ){
       num_errs++;
     }
   }
-
   return num_errs;
+}
+
+void fec_decode( u_byte use_corrupted_memory ) {
+
+    u_byte encMem1;
+    u_byte encMem0;
+    int i;
+    int encoded_mem_start_offset = PART_SIZE;
+
+    int decoded_mem_start_offset = 2*PART_SIZE;
+    u_byte * memory = mem;
+    if(use_corrupted_memory) {
+        memory = corr_mem;
+        encoded_mem_start_offset = 0;
+    }
 
 }
 
