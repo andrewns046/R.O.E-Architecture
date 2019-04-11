@@ -7,41 +7,36 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
 
 typedef unsigned char u_byte;
 
+#define DATA_BITS 11  // number of bits in one word
+#define TRANS_BITS 15  // bits transmitted (word + parity)
 #define MEM_SIZE 255
-#define ENCODE_MEM_SIZE 60
-#define K 30
+#define PART_SIZE 100  // partition size
+#define BYTE_MAX 255
 
 u_byte mem [MEM_SIZE];
 
-void fillMem( void );
+/* values read from test bench
+u_byte d_in[PART_SIZE];
+u_byte d_out[PART_SIZE];
+u_byte d_sent[PART_SIZE];
+u_byte corr[PART_SIZE]; */
+u_byte tb_mem [MEM_SIZE];
+
 void printMem( void );
 void fec_encode( void );
 u_byte xor_bits( u_byte );
+int bits_to_buf( char *, int );
+int fill_mem( void );
 
 int main( void ) {
-  //use current time as seed for random generator
-  srand(time(0));
-
-  fillMem();
+  fill_mem();
   fec_encode();
   printMem();
   return 0;
-}
-
-/* Fills half of the memory with 11 bit data sequences */
-void fillMem( void ) {
-  int i;
-
-  for( i = 0; i < ENCODE_MEM_SIZE/2; i++)
-    mem[i] = rand() % (MEM_SIZE + 1);
-
-  //pad odd [1-29] with 5 preceeding zeros
-  for( i = 1; i < ENCODE_MEM_SIZE/2; i+=2)
-    mem[i] = mem[i]>>5;
 }
 
 /*Show memory on console*/
@@ -51,6 +46,11 @@ void printMem( void ) {
   printf("=========================\n");
   for( i = (MEM_SIZE - 1); i >= 0; i--)
     printf("mem[%d] = 0x%.2X\n", i, mem[i]);
+
+  printf("\nTest Bench Memory Results\n");
+  printf("=========================\n");
+  for( i = (MEM_SIZE - 1); i >= 0; i--)
+      printf("tb_mem[%d] = 0x%.2X\n", i, tb_mem[i]);
 }
 
 /*Forward Error Code (encoding algorithm)*/
@@ -62,11 +62,11 @@ void fec_encode( void ) {
   u_byte par_bit2;
   u_byte par_bit1;
 
-  for(i = 0; i < (ENCODE_MEM_SIZE/2); i++) {
+  for(i = 0; i < PART_SIZE; i++) {
     //fec encoding algorithm
-    mem[i+K+1] = (mem[i+1] << 4) | (mem[i] >> 4);
+    mem[i+PART_SIZE+1] = (mem[i+1] << 4) | (mem[i] >> 4);
 
-    par_bit8 = xor_bits( mem[i+K+1] );
+    par_bit8 = xor_bits( mem[i+PART_SIZE+1] );
     par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) | (((mem[i] & 0x80) >> 4) >> 1) |
                          (mem[i+1] << 4) );
     par_bit2 = xor_bits( ((mem[i+1] & 0x06 ) << 4) |
@@ -77,7 +77,7 @@ void fec_encode( void ) {
                          ((mem[i] & 0x10) >> 1) | ((mem[i] & 0x08) >> 1) |
                          (mem[i] & 0x03) );
 
-    mem[i+K] = ( ((par_bit8 << 4) << 4) | ((mem[i] & 0x0E) << 3) |
+    mem[i+PART_SIZE] = ( ((par_bit8 << 4) << 4) | ((mem[i] & 0x0E) << 3) |
                                     (par_bit4 << 4) | ((mem[i] & 0x01) << 3) |
                                     (par_bit2 << 2) | (par_bit1) );
   }
@@ -91,4 +91,84 @@ u_byte xor_bits( u_byte byte ) {
     byte >>= 1;
   }
   return result;
+}
+
+/* Takes transcript from verilog file and fills mem with input and tb_mem with
+correct resutls for comparing later */
+int fill_mem( void ) {
+  FILE *fp;
+  char buf[100];
+
+  if ( (fp = fopen("prog1_2_results.txt", "rb")) == NULL ) {
+    fprintf( stderr,"Could not open file");
+    exit(1);
+  }
+
+  //read from system verilog transcript file
+  int i = 0;
+  while ( fgets(buf, 100, fp) != NULL ) {
+    bits_to_buf(buf, i);
+    i+=2;
+  }
+
+  fclose(fp);
+  return 0;
+}
+
+/* takes bits in string form then converts and stores them in
+ * more useful buffers
+ * return: number of bits stored
+ */
+int bits_to_buf( char * bit_str, int indx) {
+  int n;
+  u_byte mem1, mem0;
+  mem1 = mem0 = 0x00;
+
+  //data_in conversion
+  for(n = 0; n < 3; n++) {
+    if( bit_str[n] == '1' ) {
+      mem1 = (mem1 | 0x01);
+    }
+    if( n < 2 ) {
+      mem1 <<= 1;
+    }
+  }
+  for(n = 3; n < 11; n++) {
+    if( bit_str[n] == '1' ) {
+      mem0 = (mem0 | 0x01);
+    }
+    if( n < 10 ) {
+      mem0 <<= 1;
+    }
+  }
+
+  tb_mem[indx] = mem0;
+  tb_mem[indx+1] = mem1;
+  mem[indx] = mem0;
+  mem[indx+1] = mem1;
+
+  mem0 = mem1 = 0x00;
+
+  //data_sent
+  for( n = 12; n < 19; n++) {
+    if( bit_str[n] == '1' ) {
+      mem1 = (mem1 | 0x01);
+    }
+    if( n < 18 ) {
+      mem1 <<= 1;
+    }
+  }
+  for(n = 19; n < 27; n++) {
+    if( bit_str[n] == '1' ) {
+      mem0 = (mem0 | 0x01);
+    }
+    if( n < 26 ) {
+      mem0 <<= 1;
+    }
+  }
+
+  tb_mem[indx+100] = mem0;
+  tb_mem[indx+100+1] = mem1;
+
+  return n;
 }
