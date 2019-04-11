@@ -17,6 +17,7 @@ typedef unsigned char u_byte;
 #define PART_SIZE 100  // partition size
 #define BYTE_MAX 256
 #define ENCODE_MEM_SIZE 60
+#define K 30
 
 u_byte mem [MEM_SIZE];
 u_byte tb_mem [MEM_SIZE];
@@ -64,8 +65,9 @@ void fec_encode( void ) {
   u_byte par_bit1;
 
   for(i = 0; i < PART_SIZE; i += 2) {
+
     //fec encoding algorithm
-    mem[i+PART_SIZE+1] = (mem[i+1] << 4) | (mem[i] >> 4);
+    mem[i+PART_SIZE+1] = ( mem[i+1] << 4) | (mem[i] >> 4);
 
     par_bit8 = xor_bits( mem[i+PART_SIZE+1] );
     par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) | (((mem[i] & 0x80) >> 4) >> 1) |
