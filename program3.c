@@ -15,7 +15,6 @@
 
 typedef unsigned char u_byte;
 
-u_byte pat = 0x0B;  //1011
 u_byte bit_str1[BYTES_IN_STR];
 u_byte bit_str2[BYTES_IN_STR];
 u_byte bit_str3[BYTES_IN_STR];
@@ -23,10 +22,44 @@ u_byte bit_str4[BYTES_IN_STR];
 u_byte bit_str5[BYTES_IN_STR];
 
 void init_bitstr( void );
+int cnt_bytes( u_byte , u_byte*);
+int cnt_occur( u_byte );
+int cnt_occur2( u_byte );
 
 int main() {
+
+  u_byte pat = 0x0B;  // pattern 1011
   init_bitstr();
+
   return 0;
+}
+
+/*
+ * Returns number of bytes in which pattern occurs in memory
+ */
+int count_bytes( u_byte pat, u_byte* str) {
+  int i,
+      itr,      //bit iterator
+      cnt = 0;  //byte count
+  u_byte buf;
+  bool pat_det = 0;
+
+  for(i = (BYTES_IN_STR-1); i > 0; i--) {
+    itr = 0;
+    buf = str[i];
+
+    //continue till pattern detected or whole byte searched
+    while ( (!pat_det) && (itr != 4)) {
+      if( ( (buf^pat) << 4 ) == 0 ) {  //pattern found
+        pat_det = 1;
+        ++cnt;
+      } else {
+        ++itr;
+        buf >>= 1;
+      }
+    }
+  }
+  return cnt;
 }
 
 /* initialize bit strings of the algorithm */
