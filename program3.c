@@ -47,7 +47,6 @@ int main() {
 int cnt_bytes( u_byte pat, u_byte* str) {
   int i, j, cnt = 0;  //byte count
   u_byte buf, temp;
-  int pat_det = 0;
 
   for(i=(BYTES_IN_STR-1); i > 0; i--) {
     buf = str[i];
@@ -58,9 +57,8 @@ int cnt_bytes( u_byte pat, u_byte* str) {
       //printf("%.2X\n", temp);
       if( temp == 0x00 ) {  //pattern found
         ++cnt;
-      } else {
-        buf >>= 1;
       }
+      buf >>= 1;
     }
   }
   return cnt;
@@ -70,6 +68,7 @@ int cnt_occur( u_byte pat, u_byte* str){
   int cnt = 0;
   return cnt;
 }
+
 int cnt_occur2( u_byte pat, u_byte* str) {
   int i, j, cnt = 0;  //byte count
   u_byte buf, temp;
@@ -86,9 +85,8 @@ int cnt_occur2( u_byte pat, u_byte* str) {
       if( temp == 0x00 ) {  //pattern found
         ++cnt;
         pat_det = 1;
-      } else {
-        buf >>= 1;
       }
+      buf >>= 1;
       j++;
     }
   }
