@@ -15,21 +15,28 @@
 
 typedef unsigned char u_byte;
 
-u_byte bit_str1[BYTES_IN_STR];
-u_byte bit_str2[BYTES_IN_STR];
-u_byte bit_str3[BYTES_IN_STR];
-u_byte bit_str4[BYTES_IN_STR];
-u_byte bit_str5[BYTES_IN_STR];
-
-void init_bitstr( void );
-int cnt_bytes( u_byte , u_byte*);
-int cnt_occur( u_byte );
-int cnt_occur2( u_byte );
+void init_bitstr( u_byte*, u_byte*, u_byte*, u_byte*, u_byte* );
+int cnt_bytes( u_byte , u_byte* );
+int cnt_occur( u_byte, u_byte* );
+int cnt_occur2( u_byte, u_byte* );
 
 int main() {
+  u_byte bit_str1[BYTES_IN_STR];
+  u_byte bit_str2[BYTES_IN_STR];
+  u_byte bit_str3[BYTES_IN_STR];
+  u_byte bit_str4[BYTES_IN_STR];
+  u_byte bit_str5[BYTES_IN_STR];
 
   u_byte pat = 0x0B;  // pattern 1011
-  init_bitstr();
+
+  init_bitstr(bit_str1, bit_str2, bit_str3, bit_str4, bit_str5);
+  printf("\n************************RESULTS**************************\n");
+  printf("bit_str1\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str1), cnt_occur(pat, bit_str1), cnt_occur2(pat, bit_str1));
+  printf("bit_str2\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str2), cnt_occur(pat, bit_str2), cnt_occur2(pat, bit_str2));
+  printf("bit_str3\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str3), cnt_occur(pat, bit_str3), cnt_occur2(pat, bit_str3));
+  printf("bit_str4\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str4), cnt_occur(pat, bit_str4), cnt_occur2(pat, bit_str4));
+  printf("bit_str5\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str5), cnt_occur(pat, bit_str5), cnt_occur2(pat, bit_str5));
+  printf("\n************************RESULTS**************************\n");
 
   return 0;
 }
@@ -37,24 +44,21 @@ int main() {
 /*
  * Returns number of bytes in which pattern occurs in memory
  */
-int count_bytes( u_byte pat, u_byte* str) {
-  int i,
-      itr,      //bit iterator
-      cnt = 0;  //byte count
-  u_byte buf;
-  bool pat_det = 0;
+int cnt_bytes( u_byte pat, u_byte* str) {
+  int i, j, cnt = 0;  //byte count
+  u_byte buf, temp;
+  int pat_det = 0;
 
-  for(i = (BYTES_IN_STR-1); i > 0; i--) {
-    itr = 0;
+  for(i=(BYTES_IN_STR-1); i > 0; i--) {
     buf = str[i];
-
     //continue till pattern detected or whole byte searched
-    while ( (!pat_det) && (itr != 4)) {
-      if( ( (buf^pat) << 4 ) == 0 ) {  //pattern found
-        pat_det = 1;
+    for(j = 0; j < 5; j++ ) {
+      temp = buf^pat;
+      temp <<= 4;
+      //printf("%.2X\n", temp);
+      if( temp == 0x00 ) {  //pattern found
         ++cnt;
       } else {
-        ++itr;
         buf >>= 1;
       }
     }
@@ -62,8 +66,37 @@ int count_bytes( u_byte pat, u_byte* str) {
   return cnt;
 }
 
+int cnt_occur( u_byte pat, u_byte* str){
+  int cnt = 0;
+  return cnt;
+}
+int cnt_occur2( u_byte pat, u_byte* str) {
+  int i, j, cnt = 0;  //byte count
+  u_byte buf, temp;
+  int pat_det;
+
+  for(i=(BYTES_IN_STR-1); i > 0; i--) {
+    buf = str[i];
+    j = 0;
+    pat_det = 0;
+    //continue till pattern detected or whole byte searched
+    while( (pat_det == 0) && (j < 5) ) {
+      temp = buf^pat;
+      temp <<= 4;
+      if( temp == 0x00 ) {  //pattern found
+        ++cnt;
+        pat_det = 1;
+      } else {
+        buf >>= 1;
+      }
+      j++;
+    }
+  }
+  return cnt;
+}
+
 /* initialize bit strings of the algorithm */
-void init_bitstr( void ) {
+void init_bitstr( u_byte* bit_str1, u_byte* bit_str2, u_byte* bit_str3, u_byte* bit_str4, u_byte* bit_str5 ) {
   int i;
   for (i = 0; i < BYTES_IN_STR; i++) {
     bit_str1[i] = bit_str2[i] = bit_str3[i] = bit_str4[i] = bit_str5[i] = 0x00;
@@ -75,23 +108,23 @@ void init_bitstr( void ) {
   bit_str5[7] = 0xBB;
 
   printf("\n************************MESSAGES**************************");
-  printf("\nbit_str1:");
+  printf("\nbit_str1");
   for(i = (BYTES_IN_STR-1); i > 0; i--) {
     printf("\t%.2X", bit_str1[i]);
   }
-  printf("\nbit_str2:");
+  printf("\nbit_str2");
   for(i = (BYTES_IN_STR-1); i > 0; i--) {
     printf("\t%.2X", bit_str2[i]);
   }
-  printf("\nbit_str3:");
+  printf("\nbit_str3");
   for(i = (BYTES_IN_STR-1); i > 0; i--) {
     printf("\t%.2X", bit_str3[i]);
   }
-  printf("\nbit_str4:");
+  printf("\nbit_str4");
   for(i = (BYTES_IN_STR-1); i > 0; i--) {
     printf("\t%.2X", bit_str4[i]);
   }
-  printf("\nbit_str5:");
+  printf("\nbit_str5");
   for(i = (BYTES_IN_STR-1); i > 0; i--) {
     printf("\t%.2X", bit_str5[i]);
   }
