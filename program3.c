@@ -65,7 +65,53 @@ int cnt_bytes( u_byte pat, u_byte* str) {
 }
 
 int cnt_occur( u_byte pat, u_byte* str){
-  int cnt = 0;
+  int i, j, cnt = 0;  //byte count
+  u_byte buf, temp;
+  pat <<= 4; // adjust pattern
+  //printf("%.2X\n", pat);
+
+  for(i=(BYTES_IN_STR-1); i >= 1; i-=2) {
+    buf = str[i];
+    //continue till pattern detected or whole byte searched
+    for(j = 0; j < 5; j++ ) {
+      temp = buf^pat;
+      temp >>= 4;
+      //printf("loop1%.2X\n", temp);
+      if( temp == 0x00 ) {  //pattern found
+        ++cnt;
+      }
+      if(j < 4) buf <<= 1;
+    }
+
+    //import upper half of str[i-1]
+    buf = buf | (str[i-1] >> 4);
+    buf <<= 1;
+
+    for(j = 0; j < 4; j++ ) {
+      temp = buf^pat;
+      temp >>= 4;
+      //printf("loop2%.2X\n", temp);
+      if( temp == 0x00 ) {  //pattern found
+        ++cnt;
+      }
+      if(j < 3) buf <<= 1;
+    }
+
+    //import lower half of str[i-1]
+    buf = (buf | (str[i-1] & 0x0F));
+    buf <<= 1;
+
+    for(j = 0; j < 4; j++ ) {
+      temp = buf^pat;
+      temp >>= 4;
+      //printf("loop3%.2X\n", temp);
+      if( temp == 0x00 ) {  //pattern found
+        ++cnt;
+      }
+      buf <<= 1;
+    }
+
+  }
   return cnt;
 }
 
