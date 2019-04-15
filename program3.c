@@ -27,7 +27,7 @@ int main() {
   u_byte bit_str4[BYTES_IN_STR];
   u_byte bit_str5[BYTES_IN_STR];
 
-  u_byte pat = 0x0B;  // pattern 1011
+  u_byte pat = 0x00;  // pattern 1011
 
   init_bitstr(bit_str1, bit_str2, bit_str3, bit_str4, bit_str5);
   printf("\n************************RESULTS**************************\n");
@@ -48,7 +48,7 @@ int cnt_bytes( u_byte pat, u_byte* str) {
   int i, j, cnt = 0;  //byte count
   u_byte buf, temp;
 
-  for(i=(BYTES_IN_STR-1); i > 0; i--) {
+  for(i=(BYTES_IN_STR-1); i >= 0; i--) {
     buf = str[i];
     //continue till pattern detected or whole byte searched
     for(j = 0; j < 5; j++ ) {
@@ -120,7 +120,7 @@ int cnt_occur2( u_byte pat, u_byte* str) {
   u_byte buf, temp;
   int pat_det;
 
-  for(i=(BYTES_IN_STR-1); i > 0; i--) {
+  for(i=(BYTES_IN_STR-1); i >= 0; i--) {
     buf = str[i];
     j = 0;
     pat_det = 0;
