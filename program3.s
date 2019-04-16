@@ -243,7 +243,7 @@ cnt_bytes:
 .L6:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L10
+	bge	.L10
 	ldr	r3, [fp, #-16]
 	mov	r0, r3
 	add	sp, fp, #0
@@ -272,19 +272,13 @@ cnt_occur:
 	ldrb	r3, [fp, #-21]
 	lsl	r3, r3, #4
 	strb	r3, [fp, #-21]
-	mov	r3, #7
-	str	r3, [fp, #-8]
-	b	.L13
-.L25:
-	ldr	r3, [fp, #-8]
-	ldr	r2, [fp, #-28]
-	add	r3, r2, r3
-	ldrb	r3, [r3]
+	ldr	r3, [fp, #-28]
+	ldrb	r3, [r3, #7]
 	strb	r3, [fp, #-17]
 	mov	r3, #0
 	str	r3, [fp, #-12]
-	b	.L14
-.L17:
+	b	.L13
+.L16:
 	ldrb	r2, [fp, #-17]
 	ldrb	r3, [fp, #-21]
 	eor	r3, r3, r2
@@ -294,27 +288,30 @@ cnt_occur:
 	strb	r3, [fp, #-18]
 	ldrb	r3, [fp, #-18]	@ zero_extendqisi2
 	cmp	r3, #0
-	bne	.L15
+	bne	.L14
 	ldr	r3, [fp, #-16]
 	add	r3, r3, #1
 	str	r3, [fp, #-16]
-.L15:
+.L14:
 	ldr	r3, [fp, #-12]
 	cmp	r3, #3
-	bgt	.L16
+	bgt	.L15
 	ldrb	r3, [fp, #-17]
 	lsl	r3, r3, #1
 	strb	r3, [fp, #-17]
-.L16:
+.L15:
 	ldr	r3, [fp, #-12]
 	add	r3, r3, #1
 	str	r3, [fp, #-12]
-.L14:
+.L13:
 	ldr	r3, [fp, #-12]
 	cmp	r3, #4
-	ble	.L17
+	ble	.L16
+	mov	r3, #6
+	str	r3, [fp, #-8]
+	b	.L17
+.L26:
 	ldr	r3, [fp, #-8]
-	sub	r3, r3, #1
 	ldr	r2, [fp, #-28]
 	add	r3, r2, r3
 	ldrb	r3, [r3]	@ zero_extendqisi2
@@ -359,7 +356,6 @@ cnt_occur:
 	cmp	r3, #3
 	ble	.L21
 	ldr	r3, [fp, #-8]
-	sub	r3, r3, #1
 	ldr	r2, [fp, #-28]
 	add	r3, r2, r3
 	ldrb	r3, [r3]	@ zero_extendqisi2
@@ -376,7 +372,7 @@ cnt_occur:
 	mov	r3, #0
 	str	r3, [fp, #-12]
 	b	.L22
-.L24:
+.L25:
 	ldrb	r2, [fp, #-17]
 	ldrb	r3, [fp, #-21]
 	eor	r3, r3, r2
@@ -391,23 +387,27 @@ cnt_occur:
 	add	r3, r3, #1
 	str	r3, [fp, #-16]
 .L23:
+	ldr	r3, [fp, #-12]
+	cmp	r3, #2
+	bgt	.L24
 	ldrb	r3, [fp, #-17]
 	lsl	r3, r3, #1
 	strb	r3, [fp, #-17]
+.L24:
 	ldr	r3, [fp, #-12]
 	add	r3, r3, #1
 	str	r3, [fp, #-12]
 .L22:
 	ldr	r3, [fp, #-12]
 	cmp	r3, #3
-	ble	.L24
+	ble	.L25
 	ldr	r3, [fp, #-8]
-	sub	r3, r3, #2
+	sub	r3, r3, #1
 	str	r3, [fp, #-8]
-.L13:
+.L17:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L25
+	bge	.L26
 	ldr	r3, [fp, #-16]
 	mov	r0, r3
 	add	sp, fp, #0
@@ -435,8 +435,8 @@ cnt_occur2:
 	str	r3, [fp, #-16]
 	mov	r3, #7
 	str	r3, [fp, #-8]
-	b	.L28
-.L33:
+	b	.L29
+.L34:
 	ldr	r3, [fp, #-8]
 	ldr	r2, [fp, #-36]
 	add	r3, r2, r3
@@ -446,8 +446,8 @@ cnt_occur2:
 	str	r3, [fp, #-12]
 	mov	r3, #0
 	str	r3, [fp, #-24]
-	b	.L29
-.L32:
+	b	.L30
+.L33:
 	ldrb	r2, [fp, #-17]
 	ldrb	r3, [fp, #-29]
 	eor	r3, r3, r2
@@ -457,34 +457,34 @@ cnt_occur2:
 	strb	r3, [fp, #-25]
 	ldrb	r3, [fp, #-25]	@ zero_extendqisi2
 	cmp	r3, #0
-	bne	.L30
+	bne	.L31
 	ldr	r3, [fp, #-16]
 	add	r3, r3, #1
 	str	r3, [fp, #-16]
 	mov	r3, #1
 	str	r3, [fp, #-24]
-.L30:
+.L31:
 	ldrb	r3, [fp, #-17]	@ zero_extendqisi2
 	lsr	r3, r3, #1
 	strb	r3, [fp, #-17]
 	ldr	r3, [fp, #-12]
 	add	r3, r3, #1
 	str	r3, [fp, #-12]
-.L29:
+.L30:
 	ldr	r3, [fp, #-24]
 	cmp	r3, #0
-	bne	.L31
+	bne	.L32
 	ldr	r3, [fp, #-12]
 	cmp	r3, #4
-	ble	.L32
-.L31:
+	ble	.L33
+.L32:
 	ldr	r3, [fp, #-8]
 	sub	r3, r3, #1
 	str	r3, [fp, #-8]
-.L28:
+.L29:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L33
+	bge	.L34
 	ldr	r3, [fp, #-16]
 	mov	r0, r3
 	add	sp, fp, #0
@@ -534,8 +534,8 @@ init_bitstr:
 	str	r3, [fp, #-28]
 	mov	r3, #0
 	str	r3, [fp, #-8]
-	b	.L36
-.L37:
+	b	.L37
+.L38:
 	ldr	r3, [fp, #-8]
 	ldr	r2, [fp, #-16]
 	add	ip, r2, r3
@@ -564,10 +564,10 @@ init_bitstr:
 	ldr	r3, [fp, #-8]
 	add	r3, r3, #1
 	str	r3, [fp, #-8]
-.L36:
+.L37:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #7
-	ble	.L37
+	ble	.L38
 	ldr	r3, [fp, #-20]
 	add	r0, r3, #1
 	ldr	r3, [fp, #-24]
@@ -616,117 +616,117 @@ init_bitstr:
 	add	r3, r3, #7
 	mvn	r2, #68
 	strb	r2, [r3]
-	ldr	r0, .L48
+	ldr	r0, .L49
 	bl	printf
-	ldr	r0, .L48+4
+	ldr	r0, .L49+4
 	bl	printf
 	mov	r3, #7
 	str	r3, [fp, #-8]
-	b	.L38
-.L39:
+	b	.L39
+.L40:
 	ldr	r3, [fp, #-8]
 	ldr	r2, [fp, #-16]
 	add	r3, r2, r3
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	mov	r1, r3
-	ldr	r0, .L48+8
+	ldr	r0, .L49+8
 	bl	printf
 	ldr	r3, [fp, #-8]
 	sub	r3, r3, #1
 	str	r3, [fp, #-8]
-.L38:
+.L39:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L39
-	ldr	r0, .L48+12
+	bgt	.L40
+	ldr	r0, .L49+12
 	bl	printf
 	mov	r3, #7
 	str	r3, [fp, #-8]
-	b	.L40
-.L41:
+	b	.L41
+.L42:
 	ldr	r3, [fp, #-8]
 	ldr	r2, [fp, #-20]
 	add	r3, r2, r3
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	mov	r1, r3
-	ldr	r0, .L48+8
+	ldr	r0, .L49+8
 	bl	printf
 	ldr	r3, [fp, #-8]
 	sub	r3, r3, #1
 	str	r3, [fp, #-8]
-.L40:
+.L41:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L41
-	ldr	r0, .L48+16
+	bgt	.L42
+	ldr	r0, .L49+16
 	bl	printf
 	mov	r3, #7
 	str	r3, [fp, #-8]
-	b	.L42
-.L43:
+	b	.L43
+.L44:
 	ldr	r3, [fp, #-8]
 	ldr	r2, [fp, #-24]
 	add	r3, r2, r3
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	mov	r1, r3
-	ldr	r0, .L48+8
+	ldr	r0, .L49+8
 	bl	printf
 	ldr	r3, [fp, #-8]
 	sub	r3, r3, #1
 	str	r3, [fp, #-8]
-.L42:
+.L43:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L43
-	ldr	r0, .L48+20
+	bgt	.L44
+	ldr	r0, .L49+20
 	bl	printf
 	mov	r3, #7
 	str	r3, [fp, #-8]
-	b	.L44
-.L45:
+	b	.L45
+.L46:
 	ldr	r3, [fp, #-8]
 	ldr	r2, [fp, #-28]
 	add	r3, r2, r3
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	mov	r1, r3
-	ldr	r0, .L48+8
+	ldr	r0, .L49+8
 	bl	printf
 	ldr	r3, [fp, #-8]
 	sub	r3, r3, #1
 	str	r3, [fp, #-8]
-.L44:
+.L45:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L45
-	ldr	r0, .L48+24
+	bgt	.L46
+	ldr	r0, .L49+24
 	bl	printf
 	mov	r3, #7
 	str	r3, [fp, #-8]
-	b	.L46
-.L47:
+	b	.L47
+.L48:
 	ldr	r3, [fp, #-8]
 	ldr	r2, [fp, #4]
 	add	r3, r2, r3
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	mov	r1, r3
-	ldr	r0, .L48+8
+	ldr	r0, .L49+8
 	bl	printf
 	ldr	r3, [fp, #-8]
 	sub	r3, r3, #1
 	str	r3, [fp, #-8]
-.L46:
+.L47:
 	ldr	r3, [fp, #-8]
 	cmp	r3, #0
-	bgt	.L47
-	ldr	r0, .L48
+	bgt	.L48
+	ldr	r0, .L49
 	bl	puts
 	nop
 	sub	sp, fp, #4
 	@ sp needed
 	pop	{fp, pc}
-.L49:
+.L50:
 	.align	2
-.L48:
+.L49:
 	.word	.LC6
 	.word	.LC7
 	.word	.LC8
