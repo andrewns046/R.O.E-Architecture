@@ -27,7 +27,7 @@ int main() {
   u_byte bit_str4[BYTES_IN_STR];
   u_byte bit_str5[BYTES_IN_STR];
 
-  u_byte pat = 0x00;  // pattern 1011
+  u_byte pat = 0x0B;  // pattern 1011
 
   init_bitstr(bit_str1, bit_str2, bit_str3, bit_str4, bit_str5);
   printf("\n************************RESULTS**************************\n");
@@ -111,9 +111,8 @@ int cnt_occur( u_byte pat, u_byte* str){
       if( temp == 0x00 ) {  //pattern found
         ++cnt;
       }
-      buf <<= 1;
+      if(j < 3) buf <<= 1;
     }
-
   }
   return cnt;
 }
