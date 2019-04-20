@@ -47,8 +47,9 @@ int main( int argc, char* argv[]) {
   if( (errors = checkMem()) > 0 ) {
     fprintf(stderr ,"\nNum Errors: %d\n", errors);
   } else {
-    printf("\nNum Errors: %d\tAll Tests Passed!", errors);
+    printf("\nNum Errors: %d\tAll Tests Passed!\n", errors);
   }
+
   return 0;
 }
 
@@ -124,6 +125,10 @@ int checkMem( void ){
       num_errs++;
     }
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> cd29d040a92efeeae10efca1ef5d574f39aa7cf8
   return num_errs;
 }
 
@@ -380,7 +385,12 @@ int bits_to_buf( char * bit_str, int indx) {
   // fill corrupted bits buffer
   corr[indx] = mem0;
   corr[indx+1] = mem1;
+<<<<<<< HEAD
   mem0 = mem1 = 0x00;
+=======
+  mem0=mem1=0x00;
+
+>>>>>>> cd29d040a92efeeae10efca1ef5d574f39aa7cf8
   // decoded conversion
   for(n = 44; n < 47; n++) {
     if( bit_str[n] == '1' ) {
