@@ -16,9 +16,9 @@
 typedef unsigned char u_byte;
 
 void init_bitstr( u_byte*, u_byte*, u_byte*, u_byte*, u_byte* );
-int cnt_bytes( u_byte , u_byte* );
-int cnt_occur( u_byte, u_byte* );
-int cnt_occur2( u_byte, u_byte* );
+int num_bytes( u_byte , u_byte* );
+int num_occur( u_byte, u_byte* );
+int num_occur_in( u_byte, u_byte* );
 
 int main() {
   u_byte bit_str1[BYTES_IN_STR];
@@ -31,11 +31,11 @@ int main() {
 
   init_bitstr(bit_str1, bit_str2, bit_str3, bit_str4, bit_str5);
   printf("\n************************RESULTS**************************\n");
-  printf("bit_str1\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str1), cnt_occur(pat, bit_str1), cnt_occur2(pat, bit_str1));
-  printf("bit_str2\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str2), cnt_occur(pat, bit_str2), cnt_occur2(pat, bit_str2));
-  printf("bit_str3\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str3), cnt_occur(pat, bit_str3), cnt_occur2(pat, bit_str3));
-  printf("bit_str4\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str4), cnt_occur(pat, bit_str4), cnt_occur2(pat, bit_str4));
-  printf("bit_str5\t%d\t%d\t%d\n", cnt_bytes(pat, bit_str5), cnt_occur(pat, bit_str5), cnt_occur2(pat, bit_str5));
+  printf("bit_str1\t%d\t%d\t%d\n", num_occur_in(pat, bit_str1), num_bytes(pat, bit_str1), num_occur(pat, bit_str1));
+  printf("bit_str2\t%d\t%d\t%d\n", num_occur_in(pat, bit_str2), num_bytes(pat, bit_str2), num_occur(pat, bit_str2));
+  printf("bit_str3\t%d\t%d\t%d\n", num_occur_in(pat, bit_str3), num_bytes(pat, bit_str3), num_occur(pat, bit_str3));
+  printf("bit_str4\t%d\t%d\t%d\n", num_occur_in(pat, bit_str4), num_bytes(pat, bit_str4), num_occur(pat, bit_str4));
+  printf("bit_str5\t%d\t%d\t%d\n", num_occur_in(pat, bit_str5), num_bytes(pat, bit_str5), num_occur(pat, bit_str5));
   printf("\n************************RESULTS**************************\n");
 
   return 0;
@@ -44,7 +44,7 @@ int main() {
 /*
  * Returns number of bytes in which pattern occurs in memory
  */
-int cnt_bytes( u_byte pat, u_byte* str) {
+int num_occur_in( u_byte pat, u_byte* str) {
   int i, j, cnt = 0;  //byte count
   u_byte buf, temp;
 
@@ -64,7 +64,7 @@ int cnt_bytes( u_byte pat, u_byte* str) {
   return cnt;
 }
 
-int cnt_occur( u_byte pat, u_byte* str){
+int num_occur( u_byte pat, u_byte* str){
   int i, j, cnt = 0;  //byte count
   u_byte buf, temp;
   pat <<= 4; // adjust pattern
@@ -117,8 +117,8 @@ int cnt_occur( u_byte pat, u_byte* str){
   return cnt;
 }
 
-/*This one is the one that does not cross byte boundaries*/
-int cnt_occur2( u_byte pat, u_byte* str) {
+/*number bytes pattern occurs*/
+int num_bytes( u_byte pat, u_byte* str) {
   int i, j, cnt = 0;  //byte count
   u_byte buf, temp;
   int pat_det;
