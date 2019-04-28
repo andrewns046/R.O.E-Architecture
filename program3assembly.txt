@@ -5,9 +5,9 @@ num_occur_in:
   ! redef [write][p's]
   lw  $p0, $r0   ! $p0 = data_mem[160]
   sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
   addi  $r3, 8
   sli  $r3, 4    ! constant 128
-  sub  $r3, 1    ! change to 127 b/c condition (i >= 128 same as 127 < i)
   ! redef  [write][q's]
   sli  $q2, 8
   addi  $q2, 5   ! constant 5
@@ -17,7 +17,7 @@ L1:
   ! redef  [write][p's]
   ! redef  [read1][r's]
   ! redef  [read0][r's]
-  slt  $p1, $r3, $r0  ! if( 127 < 159 )
+  slt  $p1, $r0, $r3  ! if( i < 128 )
   ! redef  [read1][p's]
   ! redef  [read0][some register]
   bnz  $p1, END2
@@ -32,7 +32,7 @@ L2:
   xor  $q1, $q0, $p0  ! temp = buf ^ pat
   sli  $q1, 4         ! temp <<= 4
   sri  $q0, 1         ! buf >>= 1
-  bnz  $q1, NO_PAT
+  bnz  $q1, NO_PAT1
   ! redef [write][r's]
   addi  $r2, 1         ! cnt += 1
 NO_PAT1:
@@ -43,10 +43,10 @@ NO_PAT1:
   slt  $p1, $r1, $q2  ! if ( j < 5 )
   ! redef  [read1][p's]
   ! redef  [read0][some register]
-  bnz  $p1, L1
+  bnz  $p1, L2
   ! redef  [write][p's]
   addi  $p1, 1        ! $p0 = 1
-  bnz  $p1, L2
+  bnz  $p1, L1
 END1:
   slb  $p2, 1100
   sli  $p2, 4    ! write location 192
@@ -60,57 +60,62 @@ num_bytes:
   slb  $r0, 1010 ! i = 0x0A
   sli  $r0, 4    ! i = 0xA0 = 160
   sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
   addi  $r3, 8
   sli  $r3, 4    ! constant 128
-  sub  $r3, 1    ! change to 127 b/c condition (i >= 0)
-                 ! redef  [write][q's]
+  ! redef  [write][q's]
   sli  $q2, 8
   addi  $q2, 5   ! constant 5
-
-L1:
-                 ! redef  [write][r's]
+L3:
+  ! redef  [write][r's]
   subi  $r0, 1   ! i = 159, then decrement onward ;)
-                 ! redef  [write][p's]
-                 ! redef  [read1][r's]
-                 ! redef  [read0][r's]
-  slt  $p0, $r3, $r0  ! if( 127 < 159 )
-  bnz  $p0, END2
-                 ! redef  [write][r's]
+  ! redef  [write][p's]
+  ! redef  [read1][r's]
+  ! redef  [read0][r's]
+  slt  $p1, $r0, $r3  ! if( i < 128 )
+  bnz  $p1, END2
+  ! redef  [write][r's]
   sli  $r1, 8    ! j = 0
-                 ! redef  [write][q's]
-  sli  $q3, 0    ! pat = 0
+  ! redef  [write][q's]
+  sli  $q3, 0    ! pat_det = 0
   lw  $q0, $r0   ! load buf = data_mem[i]
 
-L2:
-                 ! redef [read0][p's]
-                 ! redef [read1][q's]
+L4:
+  ! redef [read0][p's]
+  ! redef [read1][q's]
   xor  $q1, $q0, $p0  ! temp = buf ^ pat
   sli  $q1, 4         ! temp <<= 4
   sri  $q0, 1         ! buf >>= 1
-  bnz  $q1, NO_PAT
-                      ! redef [write][r's]
-  addi  $r2, 1         ! cnt += 1
-  addi  $q3, 1         ! pat_det
-  bnz  $q3, L1
-
-NO_PAT1:
+  ! redef  [write][r's]
   addi  $r1, 1         ! j += 1
-                       ! redef [write][p's]
-                       ! redef [read1][r's]
-                       ! redef [read0][q's]
-  slt  $p0, $r1, $q2  ! if ( j < 5 )
-                      ! redef [read1][p's]
-  bnz  $p0, L1
-                      ! redef  [write][p's]
-  addi  $p0, 1        ! $p0 = 1
-  bnz  $p0, L2
+  bnz  $q1, NO_PAT2    ! if( temp != 0)
+  ! redef [write][r's]
+  addi  $r2, 1         ! cnt += 1
+  ! redef  [write][q's]
+  addi  $q3, 1         ! pat_det = 1
+  ! redef  [read1][q's]
+  ! redef  [read0][some register]
+  bnz  $q3, L3
+NO_PAT2:
+  ! redef [write][p's]
+  ! redef [read1][r's]
+  ! redef [read0][q's]
+  slt  $p1, $r1, $q2  ! if ( j < 5 )
+  ! redef [read1][p's]
+  bnz  $p1, L4
+  ! redef  [write][p's]
+  addi  $p1, 1        ! $p0 = 1
+  bnz  $p1, L3
 
 END1:
-  slb  $p1, 1100 ! (0x0C)
-  sli  $p1, 4    ! $p1 = 192 (write location 1)
+  slb  $p2, 1100
+  sli  $p2, 4    ! write location 192
+  addi  $p2, 1
+  ! redef  [read1][r's]
+  ! redef  [read0][p's]
+  sw  $r2, $p2   ! data_mem[193] = cnt
 
-
-cnt_occur:  ! does cross byte boundaries
+num_occur:  ! does cross byte boundaries
 
 END3:
   slb  $p3, 1100
