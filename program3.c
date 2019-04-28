@@ -117,6 +117,7 @@ int cnt_occur( u_byte pat, u_byte* str){
   return cnt;
 }
 
+/*This one is the one that does not cross byte boundaries*/
 int cnt_occur2( u_byte pat, u_byte* str) {
   int i, j, cnt = 0;  //byte count
   u_byte buf, temp;
