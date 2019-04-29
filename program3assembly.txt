@@ -4,6 +4,7 @@ num_occur_in:
   sli  $r0, 4    ! $r0 = 0xA0 = 160
   ! redef [write][p's]
   lw  $p0, $r0   ! $p0 = data_mem[160]
+  ! redef  [write][r's]
   sli  $r2, 8    ! cnt = 0
   sli  $r3, 8    ! clear garbage
   addi  $r3, 8
@@ -106,7 +107,6 @@ NO_PAT2:
   ! redef  [write][p's]
   addi  $p1, 1        ! $p0 = 1
   bnz  $p1, L3
-
 END1:
   slb  $p2, 1100
   sli  $p2, 4    ! write location 192
@@ -115,9 +115,56 @@ END1:
   ! redef  [read0][p's]
   sw  $r2, $p2   ! data_mem[193] = cnt
 
-num_occur:  ! does cross byte boundaries
-
+num_occur:
+  ! redef  [write][r's]
+  slb  $r0, 1010 ! 0x0A
+  sli  $r0, 4    ! i = 0xA0 = 160
+  ! redef [write][p's]
+  lw  $p0, $r0   ! $p0 = data_mem[160]
+  sli  $p0, 4    ! adjust pattern
+  ! redef  [write][r's]
+  sli  $r1, 8    ! j = 0
+  sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
+  addi  $r3, 8
+  sli  $r3, 4    ! constant 128
+  ! redef  [write][q's]
+  sli  $q2, 8
+  addi  $q2, 5   ! constant 5
+  sli  $s1, 8
+  addi  $s1, 4   ! constant 4
+  ! redef  [write][r's]
+  subi  $r0, 1   ! i = 159, then decrement onward ;)
+  ! redef  [write][q's]
+  ! redef  [read1][r's]
+  lw  $q0, $r0   ! load buf = data_mem[i]
+L5:
+  ! check if j < 5 TODO
+  ! redef  [read1][q's]
+  ! redef  [read0][p's]
+  xor  $q1, $q0, $p0  ! temp = buf ^ pat
+  sri  $q1, 4         ! temp >>= 4
+  ! redef  [write][s's]
+  ! redef  [read1][s's]
+  ! redef  [read0][r's]
+  slt  $s0, $s1, $r1  ! if( 3 < j )
+  ! redef [read1][s's]
+  bnz  $s0, PAT_CHECK
+  ! redef [write][q's]
+  sli  $q0, 1     ! buf <<= 1
+PAT_CHECK:
+  ! redef  [write][r's]
+  addi  $r1, 1    ! j++
+  ! redef  [read1][q's]
+  bnz  $q1, L5  ! if (temp != 0x00) branch
+  ! redef  [write][r's]
+  addi  $r2, 1  ! cnt++
+  bnz  $r2, L5  ! branch if cnt != 0
+L6:
+L7:
+L8:
 END3:
   slb  $p3, 1100
   sli  $p3, 4
   addi  $p3, 2   ! $p3 = 194 (write location 3)
+  sw  $r2, $p3   ! mem[194] = cnt
