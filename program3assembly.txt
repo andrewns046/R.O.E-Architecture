@@ -1,0 +1,249 @@
+num_occur_in:
+  ! redef  [write][r's]
+  slb  $r0, 1010 ! 0x0A
+  sli  $r0, 4    ! $r0 = 0xA0 = 160
+  ! redef [write][p's]
+  lw  $p0, $r0   ! $p0 = data_mem[160]
+  ! redef  [write][r's]
+  sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
+  addi  $r3, 8
+  sli  $r3, 4    ! constant 128
+  ! redef  [write][q's]
+  sli  $q2, 8
+  addi  $q2, 5   ! constant 5
+L1:
+  ! redef  [write][r's]
+  subi  $r0, 1   ! i = 159, then decrement onward ;)
+  ! redef  [write][p's]
+  ! redef  [read1][r's]
+  ! redef  [read0][r's]
+  slt  $p1, $r0, $r3  ! if( i < 128 )
+  ! redef  [read1][p's]
+  ! redef  [read0][some register]
+  bnz  $p1, END2
+  ! redef  [write][r's]
+  sli  $r1, 8    ! j = 0
+  ! redef  [write][q's]
+  lw  $q0, $r0   ! load buf = data_mem[i]
+L2:
+  ! redef  [write][q's]
+  ! redef  [read0][p's]
+  ! redef  [read1][q's]
+  xor  $q1, $q0, $p0  ! temp = buf ^ pat
+  sli  $q1, 4         ! temp <<= 4
+  sri  $q0, 1         ! buf >>= 1
+  bnz  $q1, NO_PAT1
+  ! redef [write][r's]
+  addi  $r2, 1         ! cnt += 1
+NO_PAT1:
+  addi  $r1, 1         ! j += 1
+  ! redef  [write][p's]
+  ! redef  [read1][r's]
+  ! redef  [read0][q's]
+  slt  $p1, $r1, $q2  ! if ( j < 5 )
+  ! redef  [read1][p's]
+  ! redef  [read0][some register]
+  bnz  $p1, L2
+  ! redef  [write][p's]
+  addi  $p1, 1        ! $p0 = 1
+  bnz  $p1, L1
+END1:
+  slb  $p2, 1100
+  sli  $p2, 4    ! write location 192
+  ! redef  [read1][r's]
+  ! redef  [read0][p's]
+  sw  $r2, $p2   ! data_mem[192] = cnt
+
+num_bytes:
+  ! redef  [write][r's]
+  sli  $r0, 8    ! clear i
+  slb  $r0, 1010 ! i = 0x0A
+  sli  $r0, 4    ! i = 0xA0 = 160
+  sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
+  addi  $r3, 8
+  sli  $r3, 4    ! constant 128
+  ! redef  [write][q's]
+  sli  $q2, 8
+  addi  $q2, 5   ! constant 5
+L3:
+  ! redef  [write][r's]
+  subi  $r0, 1   ! i = 159, then decrement onward ;)
+  ! redef  [write][p's]
+  ! redef  [read1][r's]
+  ! redef  [read0][r's]
+  slt  $p1, $r0, $r3  ! if( i < 128 )
+  bnz  $p1, END2
+  ! redef  [write][r's]
+  sli  $r1, 8    ! j = 0
+  ! redef  [write][q's]
+  sli  $q3, 0    ! pat_det = 0
+  lw  $q0, $r0   ! load buf = data_mem[i]
+L4:
+  ! redef [read0][p's]
+  ! redef [read1][q's]
+  xor  $q1, $q0, $p0  ! temp = buf ^ pat
+  sli  $q1, 4         ! temp <<= 4
+  sri  $q0, 1         ! buf >>= 1
+  ! redef  [write][r's]
+  addi  $r1, 1         ! j += 1
+  bnz  $q1, NO_PAT2    ! if( temp != 0)
+  ! redef [write][r's]
+  addi  $r2, 1         ! cnt += 1
+  ! redef  [write][q's]
+  addi  $q3, 1         ! pat_det = 1
+  ! redef  [read1][q's]
+  ! redef  [read0][some register]
+  bnz  $q3, L3
+NO_PAT2:
+  ! redef [write][p's]
+  ! redef [read1][r's]
+  ! redef [read0][q's]
+  slt  $p1, $r1, $q2  ! if ( j < 5 )
+  ! redef [read1][p's]
+  bnz  $p1, L4
+  ! redef  [write][p's]
+  addi  $p1, 1        ! $p0 = 1
+  bnz  $p1, L3
+END2:
+  slb  $p2, 1100
+  sli  $p2, 4    ! write location 192
+  addi  $p2, 1
+  ! redef  [read1][r's]
+  ! redef  [read0][p's]
+  sw  $r2, $p2   ! data_mem[193] = cnt
+
+num_occur:
+  ! redef  [write][r's]
+  slb  $r0, 1010 ! 0x0A
+  sli  $r0, 4    ! i = 0xA0 = 160
+  ! redef [write][p's]
+  lw  $p0, $r0   ! $p0 = data_mem[160]
+  sli  $p0, 4    ! adjust pattern
+  ! redef  [write][r's]
+  sli  $r1, 8    ! j = 0
+  sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
+  addi  $r3, 8
+  sli  $r3, 4    ! constant 128
+  ! redef  [write][q's]
+  sli  $q2, 8
+  addi  $q2, 4   ! constant 4
+  sli  $q3, 8
+  addi  $q3, 3   ! constant 3
+  ! redef  [write][r's]
+  subi  $r0, 1   ! i = 159, then decrement onward ;)
+  ! redef  [write][q's]
+  ! redef  [read1][r's]
+  lw  $q0, $r0   ! load buf = data_mem[i]
+L5:
+  slt  $s0, $r1, $q2   ! if(4 < j) s0 = 1 else s0 = 0
+  bnz  $s0, L6         ! If j turns to 5 this will branch
+  ! redef  [read1][q's]
+  ! redef  [read0][p's]
+  xor  $q1, $q0, $p0  ! temp = buf ^ pat
+  sri  $q1, 4         ! temp >>= 4
+  ! redef  [write][s's]
+  ! redef  [read1][q's]
+  ! redef  [read0][r's]
+  slt  $s0, $q3, $r1  ! if( 3 < j )
+  ! redef [read1][s's]
+  bnz  $s0, PAT_CHECK
+  ! redef [write][q's]
+  sli  $q0, 1     ! buf <<= 1
+PAT_CHECK:
+  ! redef  [write][r's]
+  addi  $r1, 1    ! j++
+  ! redef  [read1][q's]
+  bnz  $q1, L5  ! if (temp != 0x00) branch
+  ! redef  [write][r's]
+  addi  $r2, 1  ! cnt++
+  ! redef  [read1][r's]
+  ! redef  [read0][some register]
+  bnz  $r2, L5  ! This will always branch to L5 b/c j condition up there
+L6:
+  subi  $r0, 1        ! i= r0 = 158
+  slt  $s0, $r0, $r3  ! branch if i < 128
+  bnz  $s0, END3
+  lw  $s0, $r0  ! buf1 = str[i] = data_mem[i]
+  sri  $s0, 4   ! buf1 >>= 4
+  or  $q0, $q0, $s0  ! import upper half of data_mem
+  sli  $q0, 1   ! buf <<= 1
+  ! redef  [write][r's]
+  sli  $r1, 8    ! j = 0 reset j
+L7:
+  ! redef  [write][q's]
+  sli  $q2, 8    ! clear constant 4
+  addi  $q2, 3   ! and make constant 3
+  ! redef  [write][s's]
+  ! redef  [read1][q's]
+  ! redef  [read0][r's]
+  slt  $s0, $q2, $r1     ! if ( 3 < j )
+  bnz  $s0, PRE_L8 ! branch when j = 4
+  ! redef  [write][q's]
+  ! redef  [read1][q's]
+  ! redef  [read0][p's]
+  sli  $q3, 8
+  addi  $q3, 2   ! constant 2
+  xor  $q1, $q0, $p0  ! temp = buf^pat
+  sri  $q1, 4         ! temp >>= 4
+  ! redef  [write][s's]
+  slt  $s0, $q3, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
+  ! redef  [read1][s's]
+  ! redef  [read0][some register]
+  bnz  $s0, PAT_CHECK1  ! don't skip over next line until j is 3
+  ! redef  [write][q's]
+  sli  $q0, 1         ! buf <<=1
+PAT_CHECK1:
+  ! redef  [write][r's]
+  addi  $r1, 1    ! j++
+  ! redef  [read1][q's]
+  bnz  $q1, L5  ! if (temp != 0x00) branch
+  ! redef  [write][r's]
+  addi  $r2, 1  ! cnt++
+  ! redef  [read1][r's]
+  ! redef  [read0][some register]
+  bnz  $r2, L7  ! This will always branch to L5 b/c j condition up there
+PRE_L8:
+  lw  $s0, $r0  ! buf1 = str[i] = data_mem[i]
+  sli  $s3, 8   ! clear s3
+  slb  $s3, 0x0F  ! set lower bits
+  and  $s0, $s0, $s3
+  or  $q0, $q0, $s0    ! buf = (buf | (data_mem[i]))
+  sli  $q0, 1   ! buf <<= 1
+  ! redef  [write][r's]
+  sli  $r1, 8    ! j = 0 reset j
+L8:
+  ! redef  [write][s's]
+  ! redef  [read1][q's]
+  ! redef  [read0][r's]
+  slt  $s0, $q2, $r1     ! if ( 3 < j )
+  bnz  $s0, L6 ! branch when j = 4
+  ! redef  [write][q's]
+  ! redef  [read1][q's]
+  ! redef  [read0][p's]
+  xor  $q1, $q0, $p0  ! temp = buf^pat
+  sri  $q1, 4         ! temp >>= 4
+  ! redef  [write][s's]
+  slt  $s0, $q3, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
+  ! redef  [read1][s's]
+  ! redef  [read0][some register]
+  bnz  $s0, PAT_CHECK2  ! don't skip over next line until j is 3
+  ! redef  [write][q's]
+  sli  $q0, 1         ! buf <<=1
+PAT_CHECK2:
+  ! redef  [write][r's]
+  addi  $r1, 1    ! j++
+  ! redef  [read1][q's]
+  bnz  $q1, L8  ! if (temp != 0x00) branch
+  ! redef  [write][r's]
+  addi  $r2, 1  ! cnt++
+  ! redef  [read1][r's]
+  ! redef  [read0][some register]
+  bnz  $r2, L8  ! This will always branch to L5 b/c j condition up there
+END3:
+  slb  $p3, 1100
+  sli  $p3, 4
+  addi  $p3, 2   ! $p3 = 194 (write location 3)
+  sw  $r2, $p3   ! mem[194] = cnt
