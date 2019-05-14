@@ -26,7 +26,7 @@ typedef enum logic [3:0] {
   SHIFTL = 4'b0011,
   SHIFTR = 4'b0100,
   BNZ = 4'b0101,  //branch not equal to zero
-  SLT = 4'b0110, // set on less than
+  ALU_SLT = 4'b0110, // set on less than
   ALU_XOR = 4'b0111,
   ALU_AND = 4'b1000,
   ALU_OR = 4'b1001
