@@ -1,7 +1,6 @@
-// Create Date:     2017.05.05
-// Latest rev date: 2017.10.26
-// Created by:      J Eldon
-// Design Name:     CSE141L
+// Create Date:     May 5, 2019
+// Created by:      Andrew N. Sanchez
+// Design Name:     R.O.E arch
 // Module Name:     ALU (Arithmetic Logical Unit)
 
 
@@ -9,23 +8,22 @@
 // Includes new enum op_mnemonic to make instructions appear literally on waveform.
 import definitions::*;
 
-module alu (input  [7:0]       rs_i ,	 // operand s
-            input  [7:0]       rt_i	,	 // operand t
-    		input              ov_i ,	 // shift-in
-            input  [8:0]       op_i	,	 // instruction / opcode
-            output logic [7:0] result_o,	 // rslt
-			output logic       ov_o);
+module alu (input  [7:0]       rs_i ,	     // operand s
+            input  [7:0]       rt_i	,	     // operand t
+            input  [8:0]       op_i	,	     // instruction / opcode
+            output logic [7:0] result_o,	 // result
+			      output logic       bnz_o);      // branch not zero result
 
 op_code    op3; 	                     // type is op_code, as defined
-assign op3 = op_code'(op_i[8:6]);        // map 3 MSBs of op_i to op3 (ALU), cast to enum
+assign op3 = op_code'(op_i[8:6]);      // map 3 MSBs of op_i to op3 (ALU), cast to enum
 
-always_comb								  // no registers, no clocks
+always_comb								   // no registers, no clocks
   begin
     result_o   = 'd0;                     // default or NOP result
     ov_o       = 'd0;
   case (op3)   						      // using top 3 bits as ALU instructions
-	SLL: begin							  // logical shift left
-	       ov_o     = rs_i[7];			  // generate shift-out bit to left
+	SLL: begin							      // logical shift left
+	       ov_o     =  rs_i[7];			      // generate shift-out bit to left
 	       result_o = {rs_i[6:0],ov_i};	  // accept previous shift-out from right
 	 	 end
 	SRL: begin							  // logical right shift
@@ -45,4 +43,4 @@ always_comb								  // no registers, no clocks
     endcase
   end
 
-endmodule 
+endmodule
