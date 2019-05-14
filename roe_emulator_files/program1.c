@@ -45,7 +45,7 @@ int main( int argc, char* argv[]) {
   fec_corruptor();
   fec_decode( atoi(argv[1]) );
   if( (errors = checkMem()) > 0 ) {
-    fprintf(stderr ,"\nNum Errors: %d", errors);
+    fprintf(stderr ,"\nNum Errors: %d\n", errors);
   } else {
     printf("\nNum Errors: %d\tAll Tests Passed!\n", errors);
   }
