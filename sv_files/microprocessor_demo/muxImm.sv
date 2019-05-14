@@ -1,10 +1,13 @@
 // Mux between instruction memory and reg decode
-module muxImm ( input [1:0] b_i,
-              input [1:0] a_i,
-              input sel_i,
-              output z_o);
-always_comb unique case(sel_i)
-  0: z_o = a_i;
-  1: z_o = b_i;
-endcase
+module muxImm (input [1:0] b,
+              input [1:0] a,
+              input sel,
+              output z);
+always_comb begin
+  case(sel)
+    0: z = a;
+    1: z = b;
+    default: z = 2'bXX;
+  endcase
+end
 endmodule
