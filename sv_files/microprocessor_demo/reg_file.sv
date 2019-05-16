@@ -12,26 +12,24 @@
 // these may be strapped together or decoded in any way,
 //  to save instruction or decoder bits
 // reads are always enabled, hence no read enable control
-module reg_file #(parameter raw = 4)
-    (input             clk		     ,    // clock (for writes only)
-    input   [raw-1:0]  rs_addr_i	 ,	  // read pointer rs
-                       rt_addr_i	 ,	  // read pointer rt
-                       write_addr_i  ,	  // write pointer (rd)
-    input              wen_i		 ,	  // write enable
-    input        [7:0] write_data_i	 ,	  // data to be written/loaded 
-	output logic [7:0] rs_val_o	     ,	  // data read out of reg file
-    output logic [7:0] rt_val_o
-                );
+module reg_file #(parameter addr_w = 4)
+    (input clk,                         // clock (for writes only)
+     input [addr_w-1:0]  read0_addr,	  // read pointer rs
+     input [addr_w-1:0]  read1_addr,	  // read pointer rt
+     input [addr_w-1:0]  write_addr,	  // write pointer (rd)
+     input wen,	                        // write enable
+     input [7:0] write_data,          // data to be written/loaded
+	   output logic [7:0] read0_val_o,	      // data read out of reg file
+     output logic [7:0] read1_val_o);
 
-logic [7:0] RF [2**raw];				  // core itself
+logic [7:0] RF [2**addr_w];				  // core itself NOTE: ** means power
 // two simultaneous, continuous, combinational reads supported
-assign rt_val_o = RF [rt_addr_i];		  // out = RF content pointed to
-assign rs_val_o = RF [rs_addr_i];
+assign read0_val_o = RF [read0_addr];		  // out = RF content pointed to
+assign read1_val_o = RF [read1_addr];
 
 // synchronous (clocked) write to selected RF content "bin"
 always_ff @ (posedge clk)
-  if (wen_i) 
-	RF [write_addr_i] <= write_data_i;
+  if (wen)
+	RF [write_addr] <= write_data;
 
 endmodule
-

@@ -4,18 +4,18 @@
 // Module Name:        Control
 import defintions::*;
 module control (input [8:0] instr,
-                output [2:0] set_read0,
-                output [2:0] set_read1,
-                output [2:0] set_write,
-                output reg_imm,
-                output reg_write_src,
-                output mem_write,
-                output mem_read
-                output [3:0] alu_op,
-                output [1:0] alu_src,
-                output reg_write,
-                output reg_read_write,
-                output reg_write_read);
+                output logic [2:0] set_read0,
+                output logic [2:0] set_read1,
+                output logic [2:0] set_write,
+                output logic reg_imm,
+                output logic reg_write_src,
+                output logic mem_write,
+                output logic mem_read
+                output logic [3:0] alu_op,
+                output logic [1:0] alu_src,
+                output logic reg_write,
+                output logic reg_read_write,
+                output logic reg_write_read);
 op_code op;
 func_code fun2;
 logic fun1;
