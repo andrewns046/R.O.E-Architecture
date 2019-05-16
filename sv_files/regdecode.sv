@@ -9,7 +9,8 @@ module regdecode ( input [2:0] set_pa,
                    output logic [3:0] reg_addr);
 
 logic [1:0] pa;  // play area
-logic enable_write = set_pa[2];  // 3rd bit is enable
+logic enable_write;
+assign enable_write = set_pa[2];  // 3rd bit is enable
 
 always_ff @(posedge clk) begin
   if( enable_write == 1'b1 ) begin
