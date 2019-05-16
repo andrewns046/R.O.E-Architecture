@@ -2,7 +2,7 @@
 // Created by:         Andrew N. Sanchez
 // Design Name:        R.O.E arch
 // Module Name:        Control
-import defintions::*;
+
 module control (input [8:0] instr,
                 output logic [2:0] set_read0,
                 output logic [2:0] set_read1,
@@ -20,7 +20,7 @@ op_code op;
 func_code fun2;
 logic fun1;
 assign op = op_code'(instr[8:6]);
-assign fun2 = fun_code'(instr[5:4]);
+assign fun2 = fun_code'(instr[5:4]);  
 assign fun1 = instr[5];
 
 always_comb begin

@@ -1,11 +1,11 @@
 //This file defines the parameters used for control and alu
 package definitions;
 
-typedef enum logic[2:0] {
-  REG = 3'b000,	    // since these start at 0 and are in
-  ARITH = 3'b001,		//  increment-by-1 sequence, we could
-  SHIFT = 3'b010,		//  omit the 3'bxxx values, but we
-  HARD = 3'b011,		//  include these for clarity
+typedef enum logic [2:0] {
+  REG = 3'b000,
+  ARITH = 3'b001,
+  SHIFT = 3'b010,
+  HARD = 3'b011,
   SLT = 3'b100,
   XOR = 3'b101,
   AND = 3'b110,
