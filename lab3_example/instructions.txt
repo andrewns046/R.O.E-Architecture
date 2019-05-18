@@ -1,0 +1,3 @@
+1. Write an assembler which converts your assembly code from Lab 1 into 9-bit binary machine code.  I have attached a SystemVerilog sample, but you may use any language you wish It's a fairly simple string access, map, print sequence.
+
+2. If you have not already done so in Lab 2, write a top-level Verilog model of your design, instantiating the ALU, fetch (program counter) unit, instruction memory (either inside fetch or separate, as we discussed in class), register file, data memory, control decoder, and any other blocks you need. This does not need to solve the three problems -- that will be lab 4 -- but it should compile cleanly in both ModelSim and Quartus II.
