@@ -11,15 +11,15 @@ module dat_mem #(parameter AW=8)(
   input              CLK,                // clock
   input    [AW-1:0]  MemAdr,		 // pointer
   input              ReadMem,			 // read enable	(may be tied high)
-  input              WriteMem,			 // write enable
+  input              WriteMem,		 // write enable
   input       [7:0]  DataIn,			 // data to store (write into memory)
   output logic[7:0]  DataOut);			 //	data to load (read from memory)
 
   logic [7:0] core [2**AW]; 	   	     // create array of 2**AW elements (default = 256)
 
 // optional initialization of memory, e.g. seeding with constants
-//  initial
-//    $readmemh("dataram_init.list", my_memory);
+// initial
+// $readmemh("dataram_init.list", my_memory);
 
 // read from memory, e.g. on load instruction
   always_comb							 // reads are immediate/combinational

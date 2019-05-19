@@ -31,5 +31,4 @@ assign read1_val_o = RF [read1_addr];
 always_ff @ (posedge clk)
   if (wen)
 	RF [write_addr] <= write_data;
-
 endmodule
