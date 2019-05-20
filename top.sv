@@ -97,7 +97,7 @@ alusrc_mux alu_mux( alu_src, read0_o, instr_o[3:0],
 alu alu1( read1_o, alu_input2, alu_op, alu_bnz, result_o);
 
 // initialize data memory
-data_mem dm1( clk, read1_o, mem_read,
+dm dm1( clk, read1_o, mem_read,
               mem_write, read0_o, readdata_o);
 
 assign done = instr_o == 9'b0_0001_0001; // assign last instruction

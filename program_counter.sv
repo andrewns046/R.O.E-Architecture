@@ -16,5 +16,5 @@ module program_counter #(parameter addr_w = 16)( input logic[addr_w-1:0] jump_he
 	   addr_out <= jump_here;
 	else							// normal advance thru program
 	  addr_out <= addr_out + 'b1;
-
+    
 endmodule

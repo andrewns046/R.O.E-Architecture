@@ -20,7 +20,7 @@ op_code op;
 func_code fun2;
 logic fun1;
 assign op = op_code'(instr[8:6]);
-assign fun2 = fun_code'(instr[5:4]);  
+assign fun2 = fun_code'(instr[5:4]);
 assign fun1 = instr[5];
 
 always_comb begin
@@ -67,19 +67,54 @@ always_comb begin
     end
     HARD: begin
       case(fun2)
-        REDEF: // TODO
-        LW: // TODO
-        SW: // TODO
-        BRANCH: // TODO
+        REDEF:begin
+          case(instr[3:2]) begin
+            2'b00: set_read0 = instr[1:0]; // change read 0 pa
+            2'b01: set_read1 = instr[1:0]; // change read 1 pa
+            2'b10: set_write = instr[1:0]; // change write pa
+            2'b11: //nop
+          end
+        end
+        LW: begin
+          reg_read_write = 1'b1;
+          reg_write = 1'b1;
+          mem_read = 1'b1;
+          reg_write_src = 1'b1;
+        end
+        SW: begin
+          reg_write_read = 1'b1;
+          mem_write = 1'b1;
+        end
+        BRANCH:begin
+          reg_write_read = 1'b1;
+          alu_op = BNZ; // tell alu to test for branch
+          alu_src = 2'b10; // 3
+        end
       endcase
     end
-    SLT: begin  // TODO
+    SLT: begin
+      reg_write_read = 1'b1;
+      reg_write = 1'b1;
+      alu_src = 2'b10;
+      alu_op = ALU_SLT;
     end
-    XOR: begin // TODO
+    XOR: begin
+      reg_write_read = 1'b1;
+      reg_write = 1'b1;
+      alu_src = 2'b10;
+      alu_op = ALU_XOR;
     end
-    AND: begin // TODO
+    AND: begin
+      reg_write_read = 1'b1;
+      reg_write = 1'b1;
+      alu_src = 2'b10;
+      alu_op = ALU_AND;
     end
-    OR: begin // TODO
+    OR: begin
+      reg_write_read = 1'b1;
+      reg_write = 1'b1;
+      alu_src = 2'b10;
+      alu_op = ALU_OR;
     end
   endcase
 end
