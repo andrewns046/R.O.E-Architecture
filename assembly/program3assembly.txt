@@ -78,7 +78,7 @@ L3:
   ! redef  [write][r's]
   sli  $r1, 8    ! j = 0
   ! redef  [write][q's]
-  sli  $q3, 0    ! pat_det = 0
+  sli  $s2, 0    ! pat_det = 0
   lw  $q0, $r0   ! load buf = data_mem[i]
 L4:
   ! redef [read0][p's]
@@ -92,10 +92,10 @@ L4:
   ! redef [write][r's]
   addi  $r2, 1         ! cnt += 1
   ! redef  [write][q's]
-  addi  $q3, 1         ! pat_det = 1
+  addi  $s2, 1         ! pat_det = 1
   ! redef  [read1][q's]
   ! redef  [read0][some register]
-  bnz  $q3, L3
+  bnz  $s2, L3
 NO_PAT2:
   ! redef [write][p's]
   ! redef [read1][r's]
@@ -130,8 +130,8 @@ num_occur:
   ! redef  [write][q's]
   sli  $q2, 8
   addi  $q2, 4   ! constant 4
-  sli  $q3, 8
-  addi  $q3, 3   ! constant 3
+  sli  $s2, 8
+  addi  $s2, 3   ! constant 3
   ! redef  [write][r's]
   subi  $r0, 1   ! i = 159, then decrement onward ;)
   ! redef  [write][q's]
@@ -147,7 +147,7 @@ L5:
   ! redef  [write][s's]
   ! redef  [read1][q's]
   ! redef  [read0][r's]
-  slt  $s0, $q3, $r1  ! if( 3 < j )
+  slt  $s0, $s2, $r1  ! if( 3 < j )
   ! redef [read1][s's]
   bnz  $s0, PAT_CHECK
   ! redef [write][q's]
@@ -184,12 +184,12 @@ L7:
   ! redef  [write][q's]
   ! redef  [read1][q's]
   ! redef  [read0][p's]
-  sli  $q3, 8
-  addi  $q3, 2   ! constant 2
+  sli  $s2, 8
+  addi  $s2, 2   ! constant 2
   xor  $q1, $q0, $p0  ! temp = buf^pat
   sri  $q1, 4         ! temp >>= 4
   ! redef  [write][s's]
-  slt  $s0, $q3, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
+  slt  $s0, $s2, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
   ! redef  [read1][s's]
   ! redef  [read0][some register]
   bnz  $s0, PAT_CHECK1  ! don't skip over next line until j is 3
@@ -226,7 +226,7 @@ L8:
   xor  $q1, $q0, $p0  ! temp = buf^pat
   sri  $q1, 4         ! temp >>= 4
   ! redef  [write][s's]
-  slt  $s0, $q3, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
+  slt  $s0, $s2, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
   ! redef  [read1][s's]
   ! redef  [read0][some register]
   bnz  $s0, PAT_CHECK2  ! don't skip over next line until j is 3
