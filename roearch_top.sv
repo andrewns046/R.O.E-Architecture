@@ -3,8 +3,11 @@
 // Design Name:     R.O.E arch
 // Module Name:     top (top of R.O.E arch design)
 
-module top( input clk, reset,
-            output logic done);
+module prog #(parameter AW = 8, DW = 8)
+ (input        clk,
+               reset,	       // master reset from bench: "start over"
+		           req,		       // from test bench: "do next program"
+  output logic ack);	       // to test bench: "done with that program"
 
 parameter pc_w = 16
 
@@ -54,8 +57,7 @@ assign writesrc_mux = reg_write_src ? readdata_o : result_o;
 lut lut1(read1_o, jump_addr_o);
 
 // initialize program counter
-program_counter pc( jump_addr_o, alu_bnz, reset,
-                    halt, clk, pc_o);
+program_counter pc( req, clk, alu_bnz, jump_addr_o, pc_o);
 
 // initialize instrution memory
 InstROM instr_mem( pc_o, instr_o );
@@ -100,5 +102,18 @@ alu alu1( read1_o, alu_input2, alu_op, alu_bnz, result_o);
 dm dm1( clk, read1_o, mem_read,
               mem_write, read0_o, readdata_o);
 
-assign done = instr_o == 9'b0_0001_0001; // assign last instruction
+// the following sequence makes sure the test bench
+//  stops; in practice, you will want to tie your ack
+//  flags to the completion of each program
+always @(posedge clk) begin
+  if(reset) begin
+	   ack <= 0;
+  end
+  else if(req) begin
+	   ack <= 0;
+  end
+  else if (instr_o == 9'b011_00_1111) begin  //redef 1111
+      ack <= 1;				   // tells test bench to request next program
+  end
+end
 endmodule
