@@ -1,99 +1,98 @@
-// Create Date:     2017.11.05
-// Latest rev date: 2017.11.06
-// Created by:      J Eldon
-// Design Name:     CSE141L
-// Module Name:     top (top of sample microprocessor design) 
+// Create Date:     May
+// Created by:      Andrew N Sanchez
+// Design Name:     R.O.E arch
+// Module Name:     top (top of R.O.E arch design)
 
-module top(
-  input clk,  
-        reset,
-  output logic done
-);
-  parameter IW = 16;				// program counter / instruction pointer
-  logic              Abs_Jump,// = 1'b0, // branch to "offset"
-                     Rel_Jump;		// branch by "offset"
-  logic signed[15:0] Offset = 16'd10;
-  logic Halt;
-  wire[IW-1:0] PC;                    // pointer to insr. mem
-  wire[   8:0] InstOut;				// 9-bit machine code from instr ROM
-  wire[   7:0] rt_val_o,			// reg_file data outputs to ALU
-               rs_val_o,			// 
-               result_o;			// ALU data output
-  wire ov_o;
-  wire alu_z_o;
-  logic wen_i;                      // reg file write enable
-  logic carry_en = 1'b1;
-  logic carry_clr;
-  assign carry_clr = reset;
-  logic ov_i;
-  logic[7:0] alu_mux;
-  wire [7:0] DataOut;
-  logic      rf_sel;			   // conrol
-  logic[7:0] rf_select;            // data bus
-  logic[7:0] DataAddress;
+module top( input clk, reset,
+            output logic done);
 
-IF IF1(
-  .Abs_Jump (Abs_Jump)  ,   // branch to "offset"
-  .Rel_Jump (Rel_Jump)	 ,	// branch by "offset"
-  .Offset   (Offset  )	 ,
-  .Reset    (reset   )	 ,
-  .Halt     (1'b0    )	 ,
-  .CLK      (clk     )	 ,
-  .PC       (PC      )      // pointer to insr. mem
-  );				 
+parameter pc_w = 16
 
-InstROM #(.IW(16)) InstROM1(
-  .InstAddress (PC),	// address pointer
-  .InstOut (InstOut));
+//control wires
+wire [2:0] set_read0, set_read1, set_write;
+wire reg_imm,
+     reg_write_src,
+     mem_write,
+     mem_read;
+     reg_write,
+     reg_read_write,
+     reg_write_read;
+wire [3:0] alu_op;
+wire [1:0] alu_src;
 
-reg_file #(.raw(3)) rf1	 (
-  .clk		     (clk		    ),   // clock (for writes only)
-  .rs_addr_i	 (InstOut[2:0]  ),   // read pointer rs
-  .rt_addr_i	 (InstOut[5:3]  ),   // read pointer rt
-  .write_addr_i  (InstOut[2:0]  ),   // write pointer (rd)
-  .wen_i		 (wen_i		    ),   // write enable
-  .write_data_i	 (rf_select     ),   // data to be written/loaded 
-  .rs_val_o	     (rs_val_o	    ),   // data read out of reg file
-  .rt_val_o		 (rt_val_o	    )
-                );
+// lut wires
+wire [pc_w-1:0] jump_addr_o;  // output of LUT
 
-assign rf_select = rf_sel? DataOut : result_o;	// supports load commands
+// pc wires
+logic halt;
+wire [pc_w-1:0] pc_o;  // program counter output
 
-alu alu1(.rs_i     (alu_mux)     ,	
-         .rt_i	   (rt_val_o)	  ,	
-    	 .ov_i     (ov_i)     ,	
-         .op_i	   (InstOut)	  ,	
-// outputs
-         .result_o (result_o) ,
-		 .ov_o     (ov_o    ) ,
-		 .alu_z_o  (alu_z_o ));
+//instruction mem wires
+wire [8:0] instr_o;				  // 9-bit machine code from instr ROM
 
-data_mem dm1(
-   .CLK           (clk        ),        
-   .DataAddress   (DataAddress),
-   .ReadMem       (1'b1       ), // mem read always on		
-   .WriteMem      (WriteMem   ), // 1: mem_store		
-   .DataIn        (rs_val_o   ), // store (from RF)		
-   .DataOut       (DataOut    )  // load  (to RF)
-);
+// register decode wires
+wire [3:0] reg_code0;
+wire [3:0] reg_code1;
+wire [3:0] reg_code_w;
 
-logic[14:0] dummy;
-assign             Rel_Jump = &(InstOut[8:3]);//&&ov_o;
-assign             Abs_Jump = &(InstOut[8:0])&&alu_z_o;
-assign             done = InstOut==9'b0_0001_0001;
-assign             alu_mux = InstOut[8:6]==5? 8'b0 : rs_val_o;
-//assign             wen_i = InstOut == 9'b1_0001_1110;
-// lookup table for driving wen_i;
-lut lut1(
-  .lut_addr(InstOut[8:6]),
-  .lut_val(wen_i)//({dummy,wen_i})
-);
+// Register File wires
+wire [7:0] read0_o, read1_o;  //output wire
+
+// AlU wires
+wire [7:0] result_o;    // result of alu
+wire alu_bnz;         // alu signal to branch
+
+// data memory wires
+wire [7:0] readdata_o;
+
+// write src mux
+logic [7:0] writesrc_mux;
+assign writesrc_mux = reg_write_src ? readdata_o : result_o;
+
+// initialize look up table
+lut lut1(read1_o, jump_addr_o);
+
+// initialize program counter
+program_counter pc( jump_addr_o, alu_bnz, reset,
+                    halt, clk, pc_o);
+
+// initialize instrution memory
+InstROM instr_mem( pc_o, instr_o );
+
+//initialize control module
+control ctrl(instr_o, set_read0, set_read1,
+             set_write, reg_imm, reg_write_src,
+             mem_write, mem_read alu_op, alu_src,
+             reg_write, reg_read_write, reg_write_read);
 
 
-always_ff @(posedge clk)   // one-bit carry/shift
-  if(carry_clr==1'b1)
-    ov_i <= 1'b0;
-  else if(carry_en==1'b1)
-    ov_i <= ov_o;
+// initialize all 3 reg decode modules
+regdecode regdecode_read0(set_read0, instr_o[1:0], clk, reg_code0);
 
+// reg immediate mux before register decode read1
+logic [1:0] regimm_mux;
+assign regimm_mux = reg_imm ? instr_o[4:3]: instr_o[3:2] // check control signal
+regdecode regdecode_read1(set_read1, regimm_mux, clk, reg_code1);
+
+regdecode regdecode_write(set_write, instr_o[5:4], clk, reg_code_w);
+
+// initialize register file
+// mux before read1 input
+logic [3:0] regwr_mux;
+assign regwr_mux = reg_write_read ? reg_code1 : reg_code_w;
+
+// mux before write input
+logic [3:0] regrw_mux;
+assign regrw_mux = reg_read_write ? reg_code1 : reg_code_w;
+
+reg_file register_file(clk, reg_code0, regwr_mux, regrw_mux,
+                       reg_write, writesrc_mux, read0_o, read1_o);
+
+// initialize alu
+alu alu1();
+
+// initialize data memory
+data_mem dm1();
+
+assign done = instr_o == 9'b0_0001_0001; // assign last instruction
 endmodule

@@ -4,10 +4,7 @@
 // Module Name:    program counter
 
 module program_counter #(parameter addr_w = 16)( input logic[addr_w-1:0] jump_here,
-                               input bnz;
-                               input reset,
-                               input halt,
-                               input clk,
+                               input bnz, reset, halt, clk,
                                output logic[addr_w-1:0] addr_out);
 
   always_ff @(posedge clk)
