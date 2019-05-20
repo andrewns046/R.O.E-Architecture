@@ -28,7 +28,7 @@ logic halt;
 wire [pc_w-1:0] pc_o;  // program counter output
 
 //instruction mem wires
-wire [8:0] instr_o;				  // 9-bit machine code from instr ROM
+wire [8:0] instr_o;	   // 9-bit machine code from instr ROM
 
 // register decode wires
 wire [3:0] reg_code0;
@@ -39,6 +39,7 @@ wire [3:0] reg_code_w;
 wire [7:0] read0_o, read1_o;  //output wire
 
 // AlU wires
+wire [7:0] alu_input2;  // input coming from alu mux
 wire [7:0] result_o;    // result of alu
 wire alu_bnz;         // alu signal to branch
 
@@ -89,10 +90,15 @@ reg_file register_file(clk, reg_code0, regwr_mux, regrw_mux,
                        reg_write, writesrc_mux, read0_o, read1_o);
 
 // initialize alu
-alu alu1();
+// mux before alu
+alusrc_mux alu_mux( alu_src, read0_o, instr_o[3:0],
+                    instr_o[2:0],
+                    alu_input2);
+alu alu1( read1_o, alu_input2, alu_op, alu_bnz, result_o);
 
 // initialize data memory
-data_mem dm1();
+data_mem dm1( clk, read1_o, mem_read,
+              mem_write, read0_o, readdata_o);
 
 assign done = instr_o == 9'b0_0001_0001; // assign last instruction
 endmodule
