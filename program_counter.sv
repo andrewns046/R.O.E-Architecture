@@ -3,9 +3,9 @@
 // Design Name:    R.O.E arch
 // Module Name:    program counter
 
-module program_counter #(parameter addr_w = 16)( init, clk, bnz,
-                               input [addr_w-1:0] jump_here
-                               output logic[addr_w-1:0] addr_out = 0);
+module program_counter #(parameter addr_w = 16)(input init, clk, bnz,
+                               input [addr_w-1:0] jump_here,
+                               output logic [addr_w-1:0] addr_out = 0);
 
 always @(posedge clk) begin
 	if(!init) begin  //holds while init = 1
@@ -14,4 +14,5 @@ always @(posedge clk) begin
 	  else							// normal advance thru program
 	    addr_out <= addr_out + 1;
   end
+end
 endmodule

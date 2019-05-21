@@ -9,14 +9,14 @@ module prog #(parameter AW = 8, DW = 8)
 		           req,		       // from test bench: "do next program"
   output logic ack);	       // to test bench: "done with that program"
 
-parameter pc_w = 16
+parameter pc_w = 16;
 
 //control wires
 wire [2:0] set_read0, set_read1, set_write;
 wire reg_imm,
      reg_write_src,
      mem_write,
-     mem_read;
+     mem_read,
      reg_write,
      reg_read_write,
      reg_write_read;
@@ -65,7 +65,7 @@ InstROM instr_mem( pc_o, instr_o );
 //initialize control module
 control ctrl(instr_o, set_read0, set_read1,
              set_write, reg_imm, reg_write_src,
-             mem_write, mem_read alu_op, alu_src,
+             mem_write, mem_read, alu_op, alu_src,
              reg_write, reg_read_write, reg_write_read);
 
 
@@ -74,7 +74,7 @@ regdecode regdecode_read0(set_read0, instr_o[1:0], clk, reg_code0);
 
 // reg immediate mux before register decode read1
 logic [1:0] regimm_mux;
-assign regimm_mux = reg_imm ? instr_o[4:3]: instr_o[3:2] // check control signal
+assign regimm_mux = reg_imm ? instr_o[4:3]: instr_o[3:2]; // check control signal
 regdecode regdecode_read1(set_read1, regimm_mux, clk, reg_code1);
 
 regdecode regdecode_write(set_write, instr_o[5:4], clk, reg_code_w);
