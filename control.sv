@@ -3,6 +3,7 @@
 // Design Name:        R.O.E arch
 // Module Name:        Control
 
+import definitions::*;
 module control (input [8:0] instr,
                 output logic [2:0] set_read0,
                 output logic [2:0] set_read1,
