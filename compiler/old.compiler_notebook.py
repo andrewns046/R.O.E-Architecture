@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[167]:
+# In[154]:
 
 
 import sys
@@ -156,10 +156,9 @@ def get_regno(register):
     return to_binary(int(register[2]),2)
 
 
-# In[171]:
+# In[165]:
 
 
-sys.argv = ['compiler','../assembly/program3assembly.txt']
 program_path = sys.argv[1]
 program_name = program_path.split("/")[len(program_path.split("/"))-1]
 directory = ""
@@ -243,7 +242,7 @@ updated_assembly_file.write(updated_contents)
 updated_assembly_file.close()
 
 
-# In[172]:
+# In[156]:
 
 
 updated_assembly_file = open(directory + "updated_" + program_name,"r")
@@ -263,7 +262,7 @@ lut_file.write(label_lut)
 lut_file.close()
 
 
-# In[173]:
+# In[157]:
 
 
 updated_assembly_file = open(directory + "updated_" + program_name,"r")
@@ -277,103 +276,103 @@ for line in updated_assembly_file:
         op = split[0]
         line = line.rstrip()
         if(op == "slb"):
-            machine_code = "000"
-            machine_code += get_regno(split[1])
+            machine_code = "000_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += split[2]
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "addi"):
-            machine_code = "001"
-            machine_code += "0"
-            machine_code += get_regno(split[1])
+            machine_code = "001_"
+            machine_code += "0_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += to_binary(int(split[2])-1,3)
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "subi"):
-            machine_code = "001"
-            machine_code += "1"
-            machine_code += get_regno(split[1])
+            machine_code = "001_"
+            machine_code += "1_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += to_binary(int(split[2])-1,3)
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "sli"):
-            machine_code = "010"
-            machine_code += "0"
-            machine_code += get_regno(split[1])
+            machine_code = "010_"
+            machine_code += "0_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += to_binary(int(split[2])-1,3)
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "sri"):
-            machine_code = "010"
-            machine_code += "1"
-            machine_code += get_regno(split[1])
+            machine_code = "010_"
+            machine_code += "1_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += to_binary(int(split[2])-1,3)
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "redef"):
-            machine_code = "011"
-            machine_code += "00"
+            machine_code = "011_"
+            machine_code += "00_"
             machine_code += split[1]
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "lw"):
-            machine_code = "011"
-            machine_code += "01"
-            machine_code += get_regno(split[1])
+            machine_code = "011_"
+            machine_code += "01_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += get_regno(split[2])
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "sw"):
-            machine_code = "011"
-            machine_code += "10"
-            machine_code += get_regno(split[1])
+            machine_code = "011_"
+            machine_code += "10_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += get_regno(split[2])
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "bnz"):
-            machine_code = "011"
-            machine_code += "11"
-            machine_code += get_regno(split[1])
+            machine_code = "011_"
+            machine_code += "11_"
+            machine_code += get_regno(split[1]) + "_"
             machine_code += get_regno("$q3")
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "slt"):
-            machine_code = "100"
-            machine_code += get_regno(split[1])
-            machine_code += get_regno(split[2])
+            machine_code = "100_"
+            machine_code += get_regno(split[1]) + "_"
+            machine_code += get_regno(split[2]) + "_"
             machine_code += get_regno(split[3])
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "xor"):
-            machine_code = "101"
-            machine_code += get_regno(split[1])
-            machine_code += get_regno(split[2])
+            machine_code = "101_"
+            machine_code += get_regno(split[1]) + "_"
+            machine_code += get_regno(split[2]) + "_"
             machine_code += get_regno(split[3])
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "and"):
-            machine_code = "110"
-            machine_code += get_regno(split[1])
-            machine_code += get_regno(split[2])
+            machine_code = "110_"
+            machine_code += get_regno(split[1]) + "_"
+            machine_code += get_regno(split[2]) + "_"
             machine_code += get_regno(split[3])
             machine_code += " //" + line + " " + ("" if label == "" else "_(" + label + ")_") + "\n"
             machine_code_lines.append(machine_code)
             label = ""
         elif(op == "or"):
-            machine_code = "111"
-            machine_code += get_regno(split[1])
-            machine_code += get_regno(split[2])
+            machine_code = "111_"
+            machine_code += get_regno(split[1]) + "_"
+            machine_code += get_regno(split[2]) + "_"
             machine_code += get_regno(split[3])
             machine_code += " //" + line + " " + label + "\n"
             machine_code_lines.append(machine_code)
