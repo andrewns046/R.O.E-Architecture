@@ -87,7 +87,7 @@ initial begin
   #10ns req = 1'b0;
   wait(ack);        // wait for acknowledgment that instruction was done
   $display("Trying slt $p2, $p1, $p0 ");
-  $display("Expected:\t1\tResult:\t%d", DUT.register_file.RF[2]);
+  $display("Expected:\t0\tResult:\t%d", DUT.register_file.RF[2]);
 
   //test XOR instruction
   DUT.register_file.RF[0] = 8'd1;  // addr 1
