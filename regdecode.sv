@@ -8,7 +8,7 @@ module regdecode ( input [2:0] set_pa,
                    input clk,
                    output logic [3:0] reg_addr);
 
-logic [1:0] pa;  // play area
+logic [1:0] pa = 0;  // play area
 logic enable_write;
 assign enable_write = set_pa[2];  // 3rd bit is enable
 

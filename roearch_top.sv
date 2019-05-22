@@ -96,6 +96,7 @@ reg_file register_file(clk, reg_code0, regwr_mux, regrw_mux,
 alusrc_mux alu_mux( alu_src, read0_o, instr_o[3:0],
                     instr_o[2:0],
                     alu_input2);
+
 alu alu1( read1_o, alu_input2, alu_op, alu_bnz, result_o);
 
 // initialize data memory
