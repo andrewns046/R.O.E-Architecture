@@ -26,14 +26,17 @@ logic [7:0] ct = 0;  //counter
 
 logic [7:0] RF [2**addr_w];				  // core itself NOTE: ** means power
 // two simultaneous, continuous, combinational reads supported
-always_comb begin
-  read0_val_o <= RF [read0_addr];		  // out = RF content pointed to
-  read1_val_o <= RF [read1_addr];
-end
+
+//assign read0_val_o <= RF [read0_addr];		  // out = RF content pointed to
+//assign read1_val_o <= RF [read1_addr];
+
 
 // synchronous (clocked) write to selected RF content "bin"
 always_ff @ (posedge clk) begin
-  if (wen)
-	RF [write_addr] <= write_data;
+  read0_val_o <= RF[read0_addr];
+  read1_val_o <= RF[read1_addr];
+  if (wen) begin
+	 RF [write_addr] <= write_data;
+  end
 end
 endmodule
