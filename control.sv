@@ -49,6 +49,7 @@ always_comb begin
       reg_read_write = 1'b1;
       reg_write_read = 1'b1;
       reg_write = 1'b1;
+
       if( fun1 == 1'b0 ) begin //add
         alu_op = ADD;
       end else begin //subtract

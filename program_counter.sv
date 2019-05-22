@@ -8,6 +8,7 @@ module program_counter #(parameter addr_w = 16)(input init, clk, bnz,
                                output logic [addr_w-1:0] addr_out = 0);
 
 always @(posedge clk) begin
+  
 	if(!init) begin  //holds while init = 1
     if(bnz)				    // jump to definite address
 	    addr_out <= jump_here;

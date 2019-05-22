@@ -100,8 +100,8 @@ alusrc_mux alu_mux( alu_src, read0_o, instr_o[3:0],
 alu alu1( read1_o, alu_input2, alu_op, alu_bnz, result_o);
 
 // initialize data memory
-dm dm1( clk, read1_o, mem_read,
-              mem_write, read0_o, readdata_o);
+dm dm1( clk, read0_o, mem_read,
+              mem_write, read1_o, readdata_o);
 
 // the following sequence makes sure the test bench
 //  stops; in practice, you will want to tie your ack

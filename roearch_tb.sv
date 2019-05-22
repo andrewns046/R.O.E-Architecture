@@ -39,7 +39,7 @@ initial begin
   $display("Expected:\t93\tResult:\t%d", DUT.register_file.RF[0]);
 
   //test shift left instruction
-  DUT.register_file.RF[0] = 8'h02; // put 100 in regfile[0]
+  DUT.register_file.RF[0] = 8'h02;
   #10ns req = 1'b1;  // pulse request to DUT
   #10ns req = 1'b0;
   wait(ack);        // wait for acknowledgment that instruction was done

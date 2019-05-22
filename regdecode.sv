@@ -17,7 +17,7 @@ always_comb begin
 end
 
 always @(posedge clk) begin
-  if( enable_write == 1'b1) begin
+  if( enable_write == 1'b1 ) begin
     pa <= set_pa[1:0];
   end
 end
