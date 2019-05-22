@@ -70,9 +70,9 @@ always_comb begin
       case(fun2)
         REDEF: begin
           case(instr[3:2])
-            2'b00: set_read0 = instr[1:0]; // change read 0 pa
-            2'b01: set_read1 = instr[1:0]; // change read 1 pa
-            2'b10: set_write = instr[1:0]; // change write pa
+            2'b00: set_read0 = {1'b1,instr[1:0]}; // change read 0 pa
+            2'b01: set_read1 = {1'b1,instr[1:0]}; // change read 1 pa
+            2'b10: set_write = {1'b1,instr[1:0]}; // change write pa
           endcase
         end
         LW: begin

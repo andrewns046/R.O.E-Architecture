@@ -59,8 +59,8 @@ initial begin
   #10ns req = 1'b1;  // pulse request to DUT
   #10ns req = 1'b0;
   wait(ack);        // wait for acknowledgment that instruction was done
-  $display("Running redef and adding 99 + 1");
-  $display("Expected:\t100\tResult:\t%d", DUT.register_file.RF[4]);
+  $display("Running redef and adding 99 + 2");
+  $display("Expected:\t101\tResult:\t%d", DUT.register_file.RF[4]);
 
   //test load instruction
   DUT.dm1.core[0] = 8'hAD;  // place a value in data mem
@@ -69,7 +69,7 @@ initial begin
   #10ns req = 1'b0;
   wait(ack);        // wait for acknowledgment that instruction was done
   $display("Trying ld $p1, $p0 ");
-  $display("Expected:\tAD\tResult:\t%d", DUT.register_file.RF[1]);
+  $display("Expected:\tAD\tResult:\t%h", DUT.register_file.RF[1]);
 
   //test store instruction
   DUT.register_file.RF[0] = 8'd1;  // addr 1
