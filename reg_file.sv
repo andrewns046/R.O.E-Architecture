@@ -22,13 +22,28 @@ module reg_file #(parameter addr_w = 4)
 	   output logic [7:0] read0_val_o,	      // data read out of reg file
      output logic [7:0] read1_val_o);
 
+logic ct = 0;  //counter
+
 logic [7:0] RF [2**addr_w];				  // core itself NOTE: ** means power
 // two simultaneous, continuous, combinational reads supported
-assign read0_val_o = RF [read0_addr];		  // out = RF content pointed to
-assign read1_val_o = RF [read1_addr];
 
-// synchronous (clocked) write to selected RF content "bin"
-always_ff @ (posedge clk)
-  if (wen)
-	RF [write_addr] <= write_data;
+//assign read0_val_o <= RF [read0_addr];		  // out = RF content pointed to
+//assign read1_val_o <= RF [read1_addr];
+
+
+/*synchronous (clocked) write to selected RF content "bin"
+*/
+always_comb begin
+  read0_val_o = RF[read0_addr];
+  read1_val_o = RF[read1_addr];
+end
+
+always_ff @(posedge clk) begin
+  if (wen && ct == 0) begin // and clock on first pulse
+	  RF [write_addr] <= write_data;
+    ct <= 1;
+  end else begin
+    ct <= 0;
+  end
+end
 endmodule

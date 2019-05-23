@@ -12,13 +12,13 @@ logic [1:0] pa = 0;  // play area
 logic enable_write;
 assign enable_write = set_pa[2];  // 3rd bit is enable
 
-always_ff @(posedge clk) begin
+always_comb begin
+  reg_addr = {pa, lower_reg_addr};
+end
+
+always @(posedge clk) begin
   if( enable_write == 1'b1 ) begin
-    reg_addr <= {set_pa[1:0], lower_reg_addr};
     pa <= set_pa[1:0];
-  end else if( enable_write == 1'b0 )
-    reg_addr <= {pa, lower_reg_addr};
-  else
-    reg_addr <= 4'bXXXX;  //some garbage
+  end
 end
 endmodule

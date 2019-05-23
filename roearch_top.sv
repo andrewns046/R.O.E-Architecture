@@ -54,7 +54,7 @@ logic [7:0] writesrc_mux;
 assign writesrc_mux = reg_write_src ? readdata_o : result_o;
 
 // initialize look up table
-lut lut1(read1_o, jump_addr_o);
+lut lut1(alu_input2, jump_addr_o);
 
 // initialize program counter
 program_counter pc( req, clk, alu_bnz, jump_addr_o, pc_o);
@@ -100,8 +100,8 @@ alusrc_mux alu_mux( alu_src, read0_o, instr_o[3:0],
 alu alu1( read1_o, alu_input2, alu_op, alu_bnz, result_o);
 
 // initialize data memory
-dm dm1( clk, read1_o, mem_read,
-              mem_write, read0_o, readdata_o);
+dm dm1( clk, read0_o, mem_read,
+              mem_write, read1_o, readdata_o);
 
 // the following sequence makes sure the test bench
 //  stops; in practice, you will want to tie your ack

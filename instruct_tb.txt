@@ -1,0 +1,31 @@
+000000001  // slb $p0, 0001
+011001111  // ack
+001000111  // addi $p0, 8
+011001111  // ack
+001100110  // subi $p0, 7
+011001111  // ack
+010000001  // sli $p0, 2
+011001111  // ack
+010100000  // sri $p0, 1
+011001111  // ack
+011000101  // redef 0101 set write decode to use play area 2
+001000001  // do an add to check addi $p0, 2
+011001111  // ack
+011000100  // redef 0100 set write decode to use play area 1
+011010100  // ld p1, p0
+011001111  // ack
+011100100  // sw p1, p0
+011001111  // ack
+100100100  // slt $p2, $p1, $p0
+011001111  // ack
+101100100  // xor $p2, $p1, $p0
+011001111  // ack
+110100100  // and $p2, $p1, $p0
+011001111  // ack
+111100100  // or $p2, $p1, $p0
+011001111  // ack
+011110001  // bnz $p0, $p1 <= address of label
+001010111  // addi $p2, 1 // do several adds to p2
+001010111  // addi $p2, 1
+001010000  // addi $p2, 1 <= should branch to here so p2 should not be more than 1
+011001111  // ack

@@ -15,7 +15,11 @@ module InstROM #(parameter IW=16, DW=9)(
   logic [DW-1:0] inst_rom [2**IW];	   // 2**IW elements, DW bits each
 // load machine code program into instruction ROM
   initial
-	$readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/instruct.txt", inst_rom);
+  // test bench instructions
+	//$readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/instruct_tb.txt", inst_rom);
+  // test program 3
+  $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/machine_code_program3assembly.txt", inst_rom);
+
 
 // continuous combinational read output
 //   change the pointer (from program counter) ==> change the output
