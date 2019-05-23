@@ -138,7 +138,7 @@ num_occur:
   ! redef  [read1][r's]
   lw  $q0, $r0   ! load buf = data_mem[i]
 L5:
-  slt  $s0, $r1, $q2   ! if(4 < j) s0 = 1 else s0 = 0
+  slt  $s0, $q2, $r1   ! if(4 < j) s0 = 1 else s0 = 0
   bnz  $s0, L6         ! If j turns to 5 this will branch
   ! redef  [read1][q's]
   ! redef  [read0][p's]
@@ -148,6 +148,7 @@ L5:
   ! redef  [read1][q's]
   ! redef  [read0][r's]
   slt  $s0, $s2, $r1  ! if( 3 < j )
+                      ! If j turns to 4 this will branch
   ! redef [read1][s's]
   bnz  $s0, PAT_CHECK
   ! redef [write][q's]
@@ -199,7 +200,7 @@ PAT_CHECK1:
   ! redef  [write][r's]
   addi  $r1, 1    ! j++
   ! redef  [read1][q's]
-  bnz  $q1, L5  ! if (temp != 0x00) branch
+  bnz  $q1, L7  ! if (temp != 0x00) branch
   ! redef  [write][r's]
   addi  $r2, 1  ! cnt++
   ! redef  [read1][r's]
@@ -215,32 +216,17 @@ PRE_L8:
   ! redef  [write][r's]
   sli  $r1, 8    ! j = 0 reset j
 L8:
-  ! redef  [write][s's]
-  ! redef  [read1][q's]
-  ! redef  [read0][r's]
   slt  $s0, $q2, $r1     ! if ( 3 < j )
-  bnz  $s0, L6 ! branch when j = 4
-  ! redef  [write][q's]
-  ! redef  [read1][q's]
-  ! redef  [read0][p's]
+  bnz  $s0, L6           ! branch when j = 4
   xor  $q1, $q0, $p0  ! temp = buf^pat
   sri  $q1, 4         ! temp >>= 4
-  ! redef  [write][s's]
   slt  $s0, $s2, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
-  ! redef  [read1][s's]
-  ! redef  [read0][some register]
   bnz  $s0, PAT_CHECK2  ! don't skip over next line until j is 3
-  ! redef  [write][q's]
   sli  $q0, 1         ! buf <<=1
 PAT_CHECK2:
-  ! redef  [write][r's]
   addi  $r1, 1    ! j++
-  ! redef  [read1][q's]
   bnz  $q1, L8  ! if (temp != 0x00) branch
-  ! redef  [write][r's]
   addi  $r2, 1  ! cnt++
-  ! redef  [read1][r's]
-  ! redef  [read0][some register]
   bnz  $r2, L8  ! This will always branch to L5 b/c j condition up there
 END3:
   slb  $p3, 1100
