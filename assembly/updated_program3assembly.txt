@@ -36,11 +36,12 @@ L1:
   ! redef  [read1][p's]
   ! redef  [read0][some register]
   redef 0001
-  redef 0100
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1001
+  redef 0100
   bnz  $p1, END2
   ! redef  [write][r's]
   redef 0110
@@ -82,17 +83,20 @@ NO_PAT1:
   slt  $p1, $r1, $q2  ! if ( j < 5 )
   ! redef  [read1][p's]
   ! redef  [read0][some register]
-  redef 0100
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0010
+  redef 0100
   bnz  $p1, L2
   ! redef  [write][p's]
   addi  $p1, 1        ! $p0 = 1
+  redef 0101
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0001
+  redef 0100
   bnz  $p1, L1
 END1:
   redef 0000
@@ -136,11 +140,12 @@ L3:
   redef 0010
   slt  $p1, $r0, $r3  ! if( i < 128 )
   redef 0001
-  redef 0100
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1001
+  redef 0100
   bnz  $p1, END2
   ! redef  [write][r's]
   redef 0110
@@ -179,9 +184,11 @@ L4:
   addi  $s2, 1         ! pat_det = 1
   ! redef  [read1][q's]
   ! redef  [read0][some register]
+  redef 0101
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0110
+  redef 0111
   bnz  $s2, L3
 NO_PAT2:
   redef 0000
@@ -194,17 +201,20 @@ NO_PAT2:
   redef 0110
   slt  $p1, $r1, $q2  ! if ( j < 5 )
   ! redef [read1][p's]
-  redef 0100
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0111
+  redef 0100
   bnz  $p1, L4
   ! redef  [write][p's]
   addi  $p1, 1        ! $p0 = 1
+  redef 0101
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0110
+  redef 0100
   bnz  $p1, L3
 END2:
   redef 0000
@@ -261,11 +271,12 @@ L5:
   redef 0110
   redef 1011
   slt  $s0, $r1, $q2   ! if(4 < j) s0 = 1 else s0 = 0
-  redef 0111
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1101
+  redef 0111
   bnz  $s0, L6         ! If j turns to 5 this will branch
   ! redef  [read1][q's]
   ! redef  [read0][p's]
@@ -282,10 +293,12 @@ L5:
   slt  $s0, $s2, $r1  ! if( 3 < j )
   ! redef [read1][s's]
   redef 0001
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1100
+  redef 0111
   bnz  $s0, PAT_CHECK
   ! redef [write][q's]
   redef 0101
@@ -310,9 +323,11 @@ PAT_CHECK:
   addi  $r2, 1  ! cnt++
   ! redef  [read1][r's]
   ! redef  [read0][some register]
+  redef 0101
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1011
+  redef 0110
   bnz  $r2, L5  ! This will always branch to L5 b/c j condition up there
 L6:
   redef 0000
@@ -324,11 +339,12 @@ L6:
   redef 1011
   slt  $s0, $r0, $r3  ! branch if i < 128
   redef 0001
-  redef 0111
+  redef 0101
   redef 1001
   slb $q3, 0001
   sli $q3, 4
   slb $q3, 0011
+  redef 0111
   bnz  $s0, END3
   redef 0010
   lw  $s0, $r0  ! buf1 = str[i] = data_mem[i]
@@ -355,11 +371,11 @@ L7:
   redef 1011
   slt  $s0, $q2, $r1     ! if ( 3 < j )
   redef 0001
-  redef 0111
   redef 1001
   slb $q3, 0001
   sli $q3, 4
   slb $q3, 0000
+  redef 0111
   bnz  $s0, PRE_L8 ! branch when j = 4
   ! redef  [write][q's]
   ! redef  [read1][q's]
@@ -378,10 +394,12 @@ L7:
   ! redef  [read1][s's]
   ! redef  [read0][some register]
   redef 0001
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1111
+  redef 0111
   bnz  $s0, PAT_CHECK1  ! don't skip over next line until j is 3
   ! redef  [write][q's]
   redef 0101
@@ -406,9 +424,11 @@ PAT_CHECK1:
   addi  $r2, 1  ! cnt++
   ! redef  [read1][r's]
   ! redef  [read0][some register]
+  redef 0101
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1110
+  redef 0110
   bnz  $r2, L7  ! This will always branch to L5 b/c j condition up there
 PRE_L8:
   redef 0000
@@ -441,11 +461,11 @@ L8:
   redef 1011
   slt  $s0, $q2, $r1     ! if ( 3 < j )
   redef 0001
-  redef 0111
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1101
+  redef 0111
   bnz  $s0, L6 ! branch when j = 4
   ! redef  [write][q's]
   ! redef  [read1][q's]
@@ -462,10 +482,12 @@ L8:
   ! redef  [read1][s's]
   ! redef  [read0][some register]
   redef 0001
+  redef 0101
   redef 1001
   slb $q3, 0001
   sli $q3, 4
   slb $q3, 0010
+  redef 0111
   bnz  $s0, PAT_CHECK2  ! don't skip over next line until j is 3
   ! redef  [write][q's]
   redef 0101
@@ -490,9 +512,11 @@ PAT_CHECK2:
   addi  $r2, 1  ! cnt++
   ! redef  [read1][r's]
   ! redef  [read0][some register]
+  redef 0101
   slb $q3, 0001
   sli $q3, 4
   slb $q3, 0001
+  redef 0110
   bnz  $r2, L8  ! This will always branch to L5 b/c j condition up there
 END3:
   redef 0000
