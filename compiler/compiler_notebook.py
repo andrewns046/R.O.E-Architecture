@@ -23,7 +23,7 @@ class CompilationError(Error):
 
     def __init__(self, message):
         self.message = message
-        
+
 def update_decodes(code):
     global current_decode_sets
     # Basically just a switch case on the first two "digits" of the code
@@ -35,20 +35,20 @@ def update_decodes(code):
         elif(decode_set == "01"):
             current_decode_sets[0] = 'q'
         elif(decode_set == "10"):
-            current_decode_sets[0] = 'r'  
+            current_decode_sets[0] = 'r'
         elif(decode_set == "11"):
-            current_decode_sets[0] = 's'  
+            current_decode_sets[0] = 's'
         else:
             raise CompilationError("update_decodes: Encountered invalid redef code, Line: " + current_line)
     elif(decode_reg == "01"):
         if(decode_set == "00"):
-            current_decode_sets[1] = 'p'            
+            current_decode_sets[1] = 'p'
         elif(decode_set == "01"):
-            current_decode_sets[1] = 'q'         
+            current_decode_sets[1] = 'q'
         elif(decode_set == "10"):
-            current_decode_sets[1] = 'r'                       
+            current_decode_sets[1] = 'r'
         elif(decode_set == "11"):
-            current_decode_sets[1] = 's'                    
+            current_decode_sets[1] = 's'
         else:
             raise CompilationError("update_decodes: Encountered invalid redef code, Line: " + current_line)
     elif(decode_reg == "10"):
@@ -69,7 +69,7 @@ def update_decodes(code):
     else:
         raise CompilationError("update_decodes: Encountered invalid redef code, Line: " + current_line)
     return
-        
+
 def handle_redef(read0=None,read1=None,write=None):
     global current_line
     if(read0 is not None):
@@ -79,13 +79,13 @@ def handle_redef(read0=None,read1=None,write=None):
                 lines_to_insert.append(("  redef 0000\n",current_line))
             elif(read0[1] == 'q'):
                 update_decodes("0001")
-                lines_to_insert.append(("  redef 0001\n",current_line))                
+                lines_to_insert.append(("  redef 0001\n",current_line))
             elif(read0[1] == 'r'):
                 update_decodes("0010")
-                lines_to_insert.append(("  redef 0010\n",current_line))                
+                lines_to_insert.append(("  redef 0010\n",current_line))
             elif(read0[1] == 's'):
                 update_decodes("0011")
-                lines_to_insert.append(("  redef 0011\n",current_line))                
+                lines_to_insert.append(("  redef 0011\n",current_line))
             else:
                 raise CompilationError("handle_redef: Invalid register name, " + read0 +" Line: " + str(current_line))
             current_line += 1
@@ -96,13 +96,13 @@ def handle_redef(read0=None,read1=None,write=None):
                 lines_to_insert.append(("  redef 0100\n",current_line))
             elif(read1[1] == 'q'):
                 update_decodes("0101")
-                lines_to_insert.append(("  redef 0101\n",current_line))                
+                lines_to_insert.append(("  redef 0101\n",current_line))
             elif(read1[1] == 'r'):
                 update_decodes("0110")
-                lines_to_insert.append(("  redef 0110\n",current_line))                
+                lines_to_insert.append(("  redef 0110\n",current_line))
             elif(read1[1] == 's'):
                 update_decodes("0111")
-                lines_to_insert.append(("  redef 0111\n",current_line))                
+                lines_to_insert.append(("  redef 0111\n",current_line))
             else:
                 raise CompilationError("handle_redef: Invalid register name, " + read1 + " Line: " + str(current_line))
             current_line += 1
@@ -131,13 +131,14 @@ def handle_bnz(read1_new, label):
         raise CompilationError("handle_bnz: Label \"" + label + "\" not found, Line: " + str(current_line))
     label_lut_addr = label_dict[label]
     binary_lut_addr = to_binary(label_lut_addr,8)
-    handle_redef(read1 = read1_new, read0 = "$q3", write = "$q3")
+    handle_redef(read1 = "$q3", read0 = "$q3", write = "$q3")
     lines_to_insert.append(("  slb $q3, " + binary_lut_addr[0:4]+"\n", current_line))
     current_line += 1
     lines_to_insert.append(("  sli $q3, 4\n", current_line))
     current_line += 1
     lines_to_insert.append(("  slb $q3, " + binary_lut_addr[4:8]+"\n", current_line))
     current_line += 1
+    handle_redef(read1 = read1_new)
     return
 
 def to_binary(dec_value, n_bits):
@@ -382,4 +383,3 @@ machine_code_file = open(directory + "machine_code_" + program_name,"w")
 machine_code_lines = "".join(machine_code_lines)
 machine_code_file.write(machine_code_lines)
 machine_code_file.close()
-
