@@ -54,7 +54,7 @@ logic [7:0] writesrc_mux;
 assign writesrc_mux = reg_write_src ? readdata_o : result_o;
 
 // initialize look up table
-lut lut1(read1_o, jump_addr_o);
+lut lut1(alu_input2, jump_addr_o);
 
 // initialize program counter
 program_counter pc( req, clk, alu_bnz, jump_addr_o, pc_o);
