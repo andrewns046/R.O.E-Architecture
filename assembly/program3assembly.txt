@@ -21,7 +21,7 @@ L1:
   slt  $p1, $r0, $r3  ! if( i < 128 )
   ! redef  [read1][p's]
   ! redef  [read0][some register]
-  bnz  $p1, END2
+  bnz  $p1, END1
   ! redef  [write][r's]
   sli  $r1, 8    ! j = 0
   ! redef  [write][q's]
@@ -54,7 +54,6 @@ END1:
   ! redef  [read1][r's]
   ! redef  [read0][p's]
   sw  $r2, $p2   ! data_mem[192] = cnt
-!
 num_bytes:
   ! redef  [write][r's]
   sli  $r0, 8    ! clear i
@@ -148,7 +147,7 @@ L5:
   ! redef  [read1][q's]
   ! redef  [read0][r's]
   slt  $s0, $s2, $r1  ! if( 3 < j )
-                      ! If j turns to 4 this will branch
+  ! If j turns to 4 this will branch
   ! redef [read1][s's]
   bnz  $s0, PAT_CHECK
   ! redef [write][q's]
@@ -209,7 +208,7 @@ PAT_CHECK1:
 PRE_L8:
   lw  $s0, $r0  ! buf1 = str[i] = data_mem[i]
   sli  $s3, 8   ! clear s3
-  slb  $s3, 0x0F  ! set lower bits
+  slb  $s3, 1111  ! set lower bits
   and  $s0, $s0, $s3
   or  $q0, $q0, $s0    ! buf = (buf | (data_mem[i]))
   sli  $q0, 1   ! buf <<= 1
