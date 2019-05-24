@@ -40,6 +40,7 @@ loop:
   or $p1, $p0, $p1
   sri $p1, 2
   sli $p0, 6
+  sri $p0, 6
   xor $p0, $p0, $p1
   sli $p1, 8
   or $p1, $p0, $p1
@@ -79,6 +80,7 @@ loop:
   or $p1, $p0, $p1
   sri $p1, 2
   sli $p0, 6
+  sri $p0, 6
   xor $p0, $p0, $p1
   sli $p1, 8
   or $p1, $p0, $p1
@@ -122,6 +124,7 @@ loop:
   or $p1, $p0, $p1
   sri $p1, 2
   sli $p0, 6
+  sri $p0, 6
   xor $p0, $p0, $p1
   sli $p1, 8
   or $p1, $p0, $p1
@@ -181,6 +184,7 @@ loop:
   or $p1, $p0, $p1
   sri $p1, 2
   sli $p0, 6
+  sri $p0, 6
   xor $p0, $p0, $p1
   sli $p1, 8
   or $p1, $p0, $p1
