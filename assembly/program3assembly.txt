@@ -208,7 +208,7 @@ PAT_CHECK1:
 PRE_L8:
   lw  $s0, $r0  ! buf1 = str[i] = data_mem[i]
   sli  $s3, 8   ! clear s3
-  slb  $s3, 0x0F  ! set lower bits
+  slb  $s3, 1111  ! set lower bits
   and  $s0, $s0, $s3
   or  $q0, $q0, $s0    ! buf = (buf | (data_mem[i]))
   sli  $q0, 1   ! buf <<= 1

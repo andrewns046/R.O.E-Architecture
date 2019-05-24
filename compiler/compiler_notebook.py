@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[167]:
+# In[1]:
 
 
 import sys
@@ -131,13 +131,14 @@ def handle_bnz(read1_new, label):
         raise CompilationError("handle_bnz: Label \"" + label + "\" not found, Line: " + str(current_line))
     label_lut_addr = label_dict[label]
     binary_lut_addr = to_binary(label_lut_addr,8)
-    handle_redef(read1 = read1_new, read0 = "$q3", write = "$q3")
+    handle_redef(read1 = "$q3", read0 = "$q3", write = "$q3")
     lines_to_insert.append(("  slb $q3, " + binary_lut_addr[0:4]+"\n", current_line))
     current_line += 1
     lines_to_insert.append(("  sli $q3, 4\n", current_line))
     current_line += 1
     lines_to_insert.append(("  slb $q3, " + binary_lut_addr[4:8]+"\n", current_line))
     current_line += 1
+    handle_redef(read1 = read1_new)
     return
 
 def to_binary(dec_value, n_bits):
@@ -159,7 +160,7 @@ def get_regno(register):
 # In[171]:
 
 
-sys.argv = ['compiler','../assembly/program3assembly.txt']
+#sys.argv = ['compiler','../assembly/program3assembly.txt']
 program_path = sys.argv[1]
 program_name = program_path.split("/")[len(program_path.split("/"))-1]
 directory = ""
@@ -382,4 +383,16 @@ machine_code_file = open(directory + "machine_code_" + program_name,"w")
 machine_code_lines = "".join(machine_code_lines)
 machine_code_file.write(machine_code_lines)
 machine_code_file.close()
+
+
+# In[174]:
+
+
+to_binary(30,8)
+
+
+# In[ ]:
+
+
+
 
