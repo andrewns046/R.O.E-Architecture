@@ -1,4 +1,4 @@
-begin:
+prog1:
   slb $s1, 0001
   sli $s1, 4
   slb $s1, 1110

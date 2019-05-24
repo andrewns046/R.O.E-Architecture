@@ -512,4 +512,3 @@ END3:
   addi  $p3, 2   ! $p3 = 194 (write location 3)
   redef 0110
   sw  $r2, $p3   ! mem[194] = cnt
-  redef 1111

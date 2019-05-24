@@ -1,4 +1,4 @@
-fec_decode:
+prog2:
   slb $s0, 0100
   sli $s0, 4
   slb $s1, 0101
@@ -9,12 +9,34 @@ loop:
   lw $r0, $s0
   addi $s0, 1
   lw $r1, $s0
+  sli $p0, 8
   or $p0, $p0, $r0
   sri $p0, 7
+  sli $p1, 8
   or $p1, $p1, $r1
   sli $p1, 1
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   xor $s3, $s3, $p0
   sli $s3, 1
   sli $p0, 8
@@ -25,7 +47,27 @@ loop:
   sri $p1, 3
   sli $p1, 4
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   xor $s3, $s3, $p0
   sli $s3, 1
   sli $p0, 8
@@ -47,7 +89,27 @@ loop:
   sri $p2, 6
   or $p1, $p1, $p2
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   xor $s3, $s3, $p0
   sli $s3, 1
   sli $p0, 8
@@ -61,7 +123,27 @@ loop:
   and $p1, $p1, $p3
   sli $p1, 1
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   sli $p3, 8
   xor $s3, $s3, $p0
   sli $p0, 8
@@ -104,7 +186,7 @@ notone:
   bnz $p2, decode
 mem1flip:
   xor $r1, $r1, $p1
-decode: 
+decode:
   or $q0, $q0, $r1
   sri $q0, 4
   or $q1, $q1, $r1
@@ -125,6 +207,8 @@ decode:
   sli $r0, 8
   or $r0, $r0, $q1
   sw $r0, $s1
+  addi $s1, 1
+  sw $r1, $s1
   addi $s1, 1
   addi $s0, 1
   subi $s2, 1

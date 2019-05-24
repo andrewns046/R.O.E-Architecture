@@ -1,4 +1,4 @@
-fec_decode:
+prog2:
   redef 0000
   redef 0100
   redef 1000
@@ -21,15 +21,37 @@ loop:
   addi $s0, 1
   redef 0110
   lw $r1, $s0
-  redef 0010
   redef 0100
+  sli $p0, 8
+  redef 0010
   or $p0, $p0, $r0
   sri $p0, 7
+  sli $p1, 8
   or $p1, $p1, $r1
   sli $p1, 1
   redef 0000
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   redef 0111
   redef 1011
   xor $s3, $s3, $p0
@@ -46,7 +68,27 @@ loop:
   sli $p1, 4
   redef 0000
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   redef 0111
   redef 1011
   xor $s3, $s3, $p0
@@ -76,7 +118,27 @@ loop:
   redef 0000
   or $p1, $p1, $p2
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   redef 0111
   redef 1011
   xor $s3, $s3, $p0
@@ -98,7 +160,27 @@ loop:
   and $p1, $p1, $p3
   sli $p1, 1
   or $p0, $p0, $p1
-  ! xor_bits
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
   sli $p3, 8
   redef 0111
   redef 1011
@@ -112,10 +194,12 @@ loop:
   redef 0000
   xor $p0, $p0, $p1
   redef 0001
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1000
+  redef 0100
   bnz $p0, decode
   redef 0111
   subi $s3, 1
@@ -124,18 +208,21 @@ loop:
   redef 1000
   slt $p0, $s3, $p0
   redef 0001
-  redef 0100
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0010
+  redef 0100
   bnz $p0, mem0
   redef 1010
   slb $r2, 0001
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0011
+  redef 0100
   bnz $p1, flipping
 mem0:
   redef 0000
@@ -155,10 +242,12 @@ flipping:
   redef 0000
   xor $p0, $p0, $p2
   redef 0001
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0100
+  redef 0100
   bnz $p0, notfour
   sli $p1, 4
 notfour:
@@ -172,10 +261,12 @@ notfour:
   redef 0000
   xor $p0, $p0, $p2
   redef 0001
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0101
+  redef 0100
   bnz $p0, nottwo
   sli $p1, 2
 nottwo:
@@ -188,10 +279,12 @@ nottwo:
   redef 0000
   xor $p0, $p0, $p2
   redef 0001
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0110
+  redef 0100
   bnz $p0, notone
   sli $p1, 1
 notone:
@@ -199,21 +292,23 @@ notone:
   redef 0100
   redef 1000
   redef 0001
-  redef 0110
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0111
+  redef 0110
   bnz $r2, mem1flip
   redef 0000
   redef 1010
   xor $r0, $r0, $p1
   redef 0001
-  redef 0100
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 1000
+  redef 0100
   bnz $p2, decode
 mem1flip:
   redef 0000
@@ -222,7 +317,7 @@ mem1flip:
   redef 0110
   redef 1010
   xor $r1, $r1, $p1
-decode: 
+decode:
   redef 0000
   redef 0100
   redef 1000
@@ -263,6 +358,10 @@ decode:
   sw $r0, $s1
   redef 0111
   addi $s1, 1
+  redef 0110
+  sw $r1, $s1
+  redef 0111
+  addi $s1, 1
   addi $s0, 1
   subi $s2, 1
   sri $s3, 8
@@ -277,14 +376,14 @@ decode:
   sri $p2, 8
   sri $p3, 8
   redef 0001
-  redef 0111
+  redef 0101
   redef 1001
   slb $q3, 0000
   sli $q3, 4
   slb $q3, 0001
+  redef 0111
   bnz $s2, loop
 finished: ! what to do when finished?
   redef 0000
   redef 0100
   redef 1000
-  redef 1111

@@ -1,4 +1,4 @@
-begin:
+prog1:
   redef 0000
   redef 0100
   redef 1000
@@ -270,4 +270,3 @@ finished:
   redef 0000
   redef 0100
   redef 1000
-  redef 1111

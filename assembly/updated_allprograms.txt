@@ -1,0 +1,1185 @@
+prog1:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 1011
+  slb $s1, 0001
+  redef 0111
+  sli $s1, 4
+  slb $s1, 1110
+  slb $s2, 1111
+loop_prog1:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0011
+  redef 0110
+  lw $r0, $s0
+  redef 0111
+  addi $s0, 1
+  redef 0110
+  lw $r1, $s0
+  redef 0111
+  addi $s0, 1
+  redef 0010
+  redef 0100
+  or $p0, $p0, $r0
+  or $p1, $p1, $r1
+  sri $p0, 4
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 1001
+  or $q3, $p0, $p1
+  sli $p0, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r0
+  sli $p0, 4
+  sri $p0, 5
+  or $p1, $p1, $r0
+  sri $p1, 7
+  sli $p1, 3
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r1
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0101
+  redef 1001
+  or $q2, $q2, $p0 ! q2 = par bit 4 end page 1
+  redef 0100
+  sli $p0, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r1
+  sri $p0, 1
+  sli $p0, 6
+  or $p1, $p1, $r0
+  sli $p1, 1
+  sri $p1, 6
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  slb $p2, 1101
+  redef 0000
+  and $p1, $p1, $p2
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0101
+  redef 1001
+  or $q1, $q1, $p0 ! q1 = par bit 2
+  redef 0100
+  sli $p0, 8
+  sli $p2, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r1
+  sri $p0, 2
+  sli $p0, 7
+  or $p1, $p1, $r1
+  sli $p1, 7
+  sri $p1, 1
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  sli $p1, 1
+  sri $p1, 7
+  sli $p1, 5
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0 ! end page 2
+  sli $p1, 3
+  sri $p1, 7
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0 $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  slb $p2, 1011
+  redef 0000
+  and $p1, $p1, $p2
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0101
+  redef 1001
+  or $q0, $q0, $p0
+  redef 0100
+  sli $p0, 8
+  sli $p2, 8
+  redef 0001
+  redef 1000
+  or $p0, $p0, $q3
+  sli $p0, 7
+  or $p1, $p1, $q2
+  sli $p1, 3
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0001
+  or $p1, $p1, $q1
+  sli $p1, 1
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0001
+  or $p0, $p0, $q0
+  redef 0010
+  or $p1, $p1, $r0
+  sli $p1, 4
+  sri $p1, 5
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  sli $p1, 7
+  sri $p1, 5 ! end page 3
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r1
+  sli $p1, 4
+  or $p2, $p2, $r0
+  sri $p2, 4
+  redef 0000
+  or $p1, $p1, $p2
+  sli $p2, 8
+  redef 0011
+  sw $p0, $s1
+  redef 0111
+  addi $s1, 1
+  redef 0100
+  sw $p1, $s1
+  redef 0111
+  addi $s1, 1
+  redef 0100
+  sli $p0, 8
+  sli $p1, 8
+  redef 0101
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  redef 0111
+  subi $s2, 1
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 0001
+  redef 0111
+  bnz $s2, loop_prog1
+finished1:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 1111
+  redef 0000
+prog2:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 1011
+  slb $s0, 0100
+  redef 0111
+  sli $s0, 4
+  slb $s1, 0101
+  sli $s1, 4
+  slb $s1, 1110
+  slb $s2, 1111
+loop_prog2:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0011
+  redef 0110
+  lw $r0, $s0
+  redef 0111
+  addi $s0, 1
+  redef 0110
+  lw $r1, $s0
+  redef 0100
+  sli $p0, 8
+  redef 0010
+  or $p0, $p0, $r0
+  sri $p0, 7
+  sli $p1, 8
+  or $p1, $p1, $r1
+  sli $p1, 1
+  redef 0000
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0111
+  redef 1011
+  xor $s3, $s3, $p0
+  sli $s3, 1
+  redef 0100
+  sli $p0, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r0
+  sli $p0, 1
+  sri $p0, 4
+  or $p1, $p1, $r1
+  sri $p1, 3
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0111
+  redef 1011
+  xor $s3, $s3, $p0
+  sli $s3, 1
+  redef 0100
+  sli $p0, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r0
+  sri $p0, 5
+  sli $p0, 6
+  or $p1, $p1, $r0
+  sri $p1, 1
+  sli $p1, 6
+  sri $p1, 2
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r1
+  sli $p1, 1
+  sri $p1, 6
+  sli $p1, 2
+  or $p2, $p2, $r1
+  sli $p2, 5
+  sri $p2, 6
+  redef 0000
+  or $p1, $p1, $p2
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0111
+  redef 1011
+  xor $s3, $s3, $p0
+  sli $s3, 1
+  redef 0100
+  sli $p0, 8
+  sli $p2, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r0
+  slb $p3, 0101
+  sli $p3, 4
+  slb $p3, 0101
+  redef 0000
+  and $p0, $p0, $p3
+  redef 0010
+  or $p1, $p1, $r1
+  redef 0000
+  and $p1, $p1, $p3
+  sli $p1, 1
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  sri $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  sli $p3, 8
+  redef 0111
+  redef 1011
+  xor $s3, $s3, $p0
+  redef 0100
+  sli $p0, 8
+  redef 0011
+  redef 1000
+  slt $p0, $p0, $s3
+  slb $p1, 0001
+  redef 0000
+  xor $p0, $p0, $p1
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 1011
+  redef 0100
+  bnz $p0, decode
+  redef 0111
+  subi $s3, 1
+  subi $s3, 8
+  redef 0000
+  redef 1000
+  slt $p0, $s3, $p0
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 0101
+  redef 0100
+  bnz $p0, mem0
+  redef 1010
+  slb $r2, 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 0110
+  redef 0100
+  bnz $p1, flipping
+mem0:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0111
+  addi $s3, 8
+flipping:
+  redef 0000
+  redef 0100
+  redef 1000
+  slb $p0, 0100
+  redef 0011
+  and $p0, $p0, $s3
+  sri $p0, 2
+  slb $p2, 0001
+  redef 0000
+  xor $p0, $p0, $p2
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 0111
+  redef 0100
+  bnz $p0, notfour
+  sli $p1, 4
+notfour:
+  redef 0000
+  redef 0100
+  redef 1000
+  slb $p0, 0010
+  redef 0011
+  and $p0, $p0, $s3
+  sri $p0, 1
+  redef 0000
+  xor $p0, $p0, $p2
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 1000
+  redef 0100
+  bnz $p0, nottwo
+  sli $p1, 2
+nottwo:
+  redef 0000
+  redef 0100
+  redef 1000
+  slb $p0, 0001
+  redef 0011
+  and $p0, $p0, $s3
+  redef 0000
+  xor $p0, $p0, $p2
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 1001
+  redef 0100
+  bnz $p0, notone
+  sli $p1, 1
+notone:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 1010
+  redef 0110
+  bnz $r2, mem1flip
+  redef 0000
+  redef 1010
+  xor $r0, $r0, $p1
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 1011
+  redef 0100
+  bnz $p2, decode
+mem1flip:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0110
+  redef 1010
+  xor $r1, $r1, $p1
+decode:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0010
+  redef 0101
+  redef 1001
+  or $q0, $q0, $r1
+  sri $q0, 4
+  or $q1, $q1, $r1
+  sli $q1, 4
+  redef 0110
+  sri $r1, 8
+  redef 0001
+  redef 1010
+  or $r1, $r1, $q0
+  redef 0101
+  sri $q0, 8
+  redef 0010
+  redef 1001
+  or $q0, $q0, $r0
+  sli $q0, 1
+  sri $q0, 5
+  sli $q0, 1
+  redef 0001
+  or $q1, $q0, $q1
+  sli $q0, 8
+  redef 0010
+  or $q0, $q0, $r0
+  sli $q0, 5
+  sri $q0, 7
+  redef 0001
+  or $q1, $q0, $q1
+  redef 0110
+  sli $r0, 8
+  redef 1010
+  or $r0, $r0, $q1
+  redef 0011
+  sw $r0, $s1
+  redef 0111
+  addi $s1, 1
+  redef 0110
+  sw $r1, $s1
+  redef 0111
+  addi $s1, 1
+  addi $s0, 1
+  subi $s2, 1
+  sri $s3, 8
+  redef 0101
+  sri $q0, 8
+  sri $q1, 8
+  redef 0110
+  sri $r2, 8
+  redef 0100
+  sri $p0, 8
+  sri $p1, 8
+  sri $p2, 8
+  sri $p3, 8
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 0100
+  redef 0111
+  bnz $s2, loop_prog2
+finished2:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 1111
+  redef 0000
+num_occur_in:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][r's]
+  redef 1010
+  slb  $r0, 1010 ! 0x0A
+  redef 0110
+  sli  $r0, 4    ! $r0 = 0xA0 = 160
+  ! redef [write][p's]
+  redef 0010
+  redef 0100
+  lw  $p0, $r0   ! $p0 = data_mem[160]
+  ! redef  [write][r's]
+  redef 0110
+  sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
+  addi  $r3, 8
+  sli  $r3, 4    ! constant 128
+  ! redef  [write][q's]
+  redef 0101
+  sli  $q2, 8
+  addi  $q2, 5   ! constant 5
+L1:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][r's]
+  redef 0110
+  subi  $r0, 1   ! i = 159, then decrement onward ;)
+  ! redef  [write][p's]
+  ! redef  [read1][r's]
+  ! redef  [read0][r's]
+  redef 0010
+  slt  $p1, $r0, $r3  ! if( i < 128 )
+  ! redef  [read1][p's]
+  ! redef  [read0][some register]
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 0001
+  redef 0100
+  bnz  $p1, END1
+  ! redef  [write][r's]
+  redef 0110
+  sli  $r1, 8    ! j = 0
+  ! redef  [write][q's]
+  redef 0010
+  redef 0101
+  lw  $q0, $r0   ! load buf = data_mem[i]
+L2:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][q's]
+  ! redef  [read0][p's]
+  ! redef  [read1][q's]
+  redef 0101
+  redef 1001
+  xor  $q1, $q0, $p0  ! temp = buf ^ pat
+  sli  $q1, 4         ! temp <<= 4
+  sri  $q0, 1         ! buf >>= 1
+  redef 0001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 0000
+  bnz  $q1, NO_PAT1
+  ! redef [write][r's]
+  redef 0110
+  addi  $r2, 1         ! cnt += 1
+NO_PAT1:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0110
+  addi  $r1, 1         ! j += 1
+  ! redef  [write][p's]
+  ! redef  [read1][r's]
+  ! redef  [read0][q's]
+  redef 0001
+  slt  $p1, $r1, $q2  ! if ( j < 5 )
+  ! redef  [read1][p's]
+  ! redef  [read0][some register]
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 1111
+  redef 0100
+  bnz  $p1, L2
+  ! redef  [write][p's]
+  addi  $p1, 1        ! $p0 = 1
+  redef 0101
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 1110
+  redef 0100
+  bnz  $p1, L1
+END1:
+  redef 0000
+  redef 0100
+  redef 1000
+  slb  $p2, 1100
+  sli  $p2, 4    ! write location 192
+  ! redef  [read1][r's]
+  ! redef  [read0][p's]
+  redef 0110
+  sw  $r2, $p2   ! data_mem[192] = cnt
+num_bytes:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][r's]
+  redef 0110
+  sli  $r0, 8    ! clear i
+  redef 1010
+  slb  $r0, 1010 ! i = 0x0A
+  sli  $r0, 4    ! i = 0xA0 = 160
+  sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
+  addi  $r3, 8
+  sli  $r3, 4    ! constant 128
+  ! redef  [write][q's]
+  redef 0101
+  sli  $q2, 8
+  addi  $q2, 5   ! constant 5
+L3:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][r's]
+  redef 0110
+  subi  $r0, 1   ! i = 159, then decrement onward ;)
+  ! redef  [write][p's]
+  ! redef  [read1][r's]
+  ! redef  [read0][r's]
+  redef 0010
+  slt  $p1, $r0, $r3  ! if( i < 128 )
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 0110
+  redef 0100
+  bnz  $p1, END2
+  ! redef  [write][r's]
+  redef 0110
+  sli  $r1, 8    ! j = 0
+  ! redef  [write][q's]
+  redef 0111
+  sli  $s2, 0    ! pat_det = 0
+  redef 0010
+  redef 0101
+  lw  $q0, $r0   ! load buf = data_mem[i]
+L4:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef [read0][p's]
+  ! redef [read1][q's]
+  redef 0101
+  redef 1001
+  xor  $q1, $q0, $p0  ! temp = buf ^ pat
+  sli  $q1, 4         ! temp <<= 4
+  sri  $q0, 1         ! buf >>= 1
+  ! redef  [write][r's]
+  redef 0110
+  addi  $r1, 1         ! j += 1
+  redef 0001
+  redef 0101
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 0101
+  bnz  $q1, NO_PAT2    ! if( temp != 0)
+  ! redef [write][r's]
+  redef 0110
+  addi  $r2, 1         ! cnt += 1
+  ! redef  [write][q's]
+  redef 0111
+  addi  $s2, 1         ! pat_det = 1
+  ! redef  [read1][q's]
+  ! redef  [read0][some register]
+  redef 0101
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 0011
+  redef 0111
+  bnz  $s2, L3
+NO_PAT2:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef [write][p's]
+  ! redef [read1][r's]
+  ! redef [read0][q's]
+  redef 0001
+  redef 0110
+  slt  $p1, $r1, $q2  ! if ( j < 5 )
+  ! redef [read1][p's]
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 0100
+  redef 0100
+  bnz  $p1, L4
+  ! redef  [write][p's]
+  addi  $p1, 1        ! $p0 = 1
+  redef 0101
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 0011
+  redef 0100
+  bnz  $p1, L3
+END2:
+  redef 0000
+  redef 0100
+  redef 1000
+  slb  $p2, 1100
+  sli  $p2, 4    ! write location 192
+  addi  $p2, 1
+  ! redef  [read1][r's]
+  ! redef  [read0][p's]
+  redef 0110
+  sw  $r2, $p2   ! data_mem[193] = cnt
+!
+num_occur:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][r's]
+  redef 1010
+  slb  $r0, 1010 ! 0x0A
+  redef 0110
+  sli  $r0, 4    ! i = 0xA0 = 160
+  ! redef [write][p's]
+  redef 0010
+  redef 0100
+  lw  $p0, $r0   ! $p0 = data_mem[160]
+  sli  $p0, 4    ! adjust pattern
+  ! redef  [write][r's]
+  redef 0110
+  sli  $r1, 8    ! j = 0
+  sli  $r2, 8    ! cnt = 0
+  sli  $r3, 8    ! clear garbage
+  addi  $r3, 8
+  sli  $r3, 4    ! constant 128
+  ! redef  [write][q's]
+  redef 0101
+  sli  $q2, 8
+  addi  $q2, 4   ! constant 4
+  redef 0111
+  sli  $s2, 8
+  addi  $s2, 3   ! constant 3
+  ! redef  [write][r's]
+  redef 0110
+  subi  $r0, 1   ! i = 159, then decrement onward ;)
+  ! redef  [write][q's]
+  ! redef  [read1][r's]
+  redef 0101
+  lw  $q0, $r0   ! load buf = data_mem[i]
+L5:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0010
+  redef 0101
+  redef 1011
+  slt  $s0, $q2, $r1   ! if(4 < j) s0 = 1 else s0 = 0
+  redef 0001
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1010
+  redef 0111
+  bnz  $s0, L6         ! If j turns to 5 this will branch
+  ! redef  [read1][q's]
+  ! redef  [read0][p's]
+  redef 0000
+  redef 0101
+  xor  $q1, $q0, $p0  ! temp = buf ^ pat
+  sri  $q1, 4         ! temp >>= 4
+  ! redef  [write][s's]
+  ! redef  [read1][q's]
+  ! redef  [read0][r's]
+  redef 0010
+  redef 0111
+  redef 1011
+  slt  $s0, $s2, $r1  ! if( 3 < j )
+  ! If j turns to 4 this will branch
+  ! redef [read1][s's]
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1001
+  redef 0111
+  bnz  $s0, PAT_CHECK
+  ! redef [write][q's]
+  redef 0101
+  sli  $q0, 1     ! buf <<= 1
+PAT_CHECK:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][r's]
+  redef 0110
+  addi  $r1, 1    ! j++
+  ! redef  [read1][q's]
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1000
+  bnz  $q1, L5  ! if (temp != 0x00) branch
+  ! redef  [write][r's]
+  redef 0110
+  addi  $r2, 1  ! cnt++
+  ! redef  [read1][r's]
+  ! redef  [read0][some register]
+  redef 0101
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1000
+  redef 0110
+  bnz  $r2, L5  ! This will always branch to L5 b/c j condition up there
+L6:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0110
+  subi  $r0, 1        ! i= r0 = 158
+  redef 0010
+  redef 1011
+  slt  $s0, $r0, $r3  ! branch if i < 128
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0010
+  sli $q3, 4
+  slb $q3, 0000
+  redef 0111
+  bnz  $s0, END3
+  redef 0010
+  lw  $s0, $r0  ! buf1 = str[i] = data_mem[i]
+  sri  $s0, 4   ! buf1 >>= 4
+  redef 0011
+  redef 0101
+  or  $q0, $q0, $s0  ! import upper half of data_mem
+  sli  $q0, 1   ! buf <<= 1
+  ! redef  [write][r's]
+  redef 0110
+  sli  $r1, 8    ! j = 0 reset j
+L7:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][q's]
+  redef 0101
+  sli  $q2, 8    ! clear constant 4
+  addi  $q2, 3   ! and make constant 3
+  ! redef  [write][s's]
+  ! redef  [read1][q's]
+  ! redef  [read0][r's]
+  redef 0010
+  redef 1011
+  slt  $s0, $q2, $r1     ! if ( 3 < j )
+  redef 0001
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1101
+  redef 0111
+  bnz  $s0, PRE_L8 ! branch when j = 4
+  ! redef  [write][q's]
+  ! redef  [read1][q's]
+  ! redef  [read0][p's]
+  sli  $s2, 8
+  addi  $s2, 2   ! constant 2
+  redef 0000
+  redef 0101
+  xor  $q1, $q0, $p0  ! temp = buf^pat
+  sri  $q1, 4         ! temp >>= 4
+  ! redef  [write][s's]
+  redef 0010
+  redef 0111
+  redef 1011
+  slt  $s0, $s2, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
+  ! redef  [read1][s's]
+  ! redef  [read0][some register]
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1100
+  redef 0111
+  bnz  $s0, PAT_CHECK1  ! don't skip over next line until j is 3
+  ! redef  [write][q's]
+  redef 0101
+  sli  $q0, 1         ! buf <<=1
+PAT_CHECK1:
+  redef 0000
+  redef 0100
+  redef 1000
+  ! redef  [write][r's]
+  redef 0110
+  addi  $r1, 1    ! j++
+  ! redef  [read1][q's]
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1011
+  bnz  $q1, L7  ! if (temp != 0x00) branch
+  ! redef  [write][r's]
+  redef 0110
+  addi  $r2, 1  ! cnt++
+  ! redef  [read1][r's]
+  ! redef  [read0][some register]
+  redef 0101
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1011
+  redef 0110
+  bnz  $r2, L7  ! This will always branch to L5 b/c j condition up there
+PRE_L8:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0010
+  redef 0111
+  lw  $s0, $r0  ! buf1 = str[i] = data_mem[i]
+  sli  $s3, 8   ! clear s3
+  redef 1011
+  slb  $s3, 1111  ! set lower bits
+  redef 0011
+  and  $s0, $s0, $s3
+  redef 0101
+  redef 1001
+  or  $q0, $q0, $s0    ! buf = (buf | (data_mem[i]))
+  sli  $q0, 1   ! buf <<= 1
+  ! redef  [write][r's]
+  redef 0110
+  sli  $r1, 8    ! j = 0 reset j
+L8:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0010
+  redef 0101
+  redef 1011
+  slt  $s0, $q2, $r1     ! if ( 3 < j )
+  redef 0001
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1010
+  redef 0111
+  bnz  $s0, L6           ! branch when j = 4
+  redef 0000
+  redef 0101
+  xor  $q1, $q0, $p0  ! temp = buf^pat
+  sri  $q1, 4         ! temp >>= 4
+  redef 0010
+  redef 0111
+  redef 1011
+  slt  $s0, $s2, $r1  ! if (2 < j) set s0 = 1 else s0 = 0
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1111
+  redef 0111
+  bnz  $s0, PAT_CHECK2  ! don't skip over next line until j is 3
+  redef 0101
+  sli  $q0, 1         ! buf <<=1
+PAT_CHECK2:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0110
+  addi  $r1, 1    ! j++
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1110
+  bnz  $q1, L8  ! if (temp != 0x00) branch
+  redef 0110
+  addi  $r2, 1  ! cnt++
+  redef 0101
+  slb $q3, 0001
+  sli $q3, 4
+  slb $q3, 1110
+  redef 0110
+  bnz  $r2, L8  ! This will always branch to L5 b/c j condition up there
+END3:
+  redef 0000
+  redef 0100
+  redef 1000
+  slb  $p3, 1100
+  sli  $p3, 4
+  addi  $p3, 2   ! $p3 = 194 (write location 3)
+  redef 0110
+  sw  $r2, $p3   ! mem[194] = cnt
+finished3:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 1111
+  redef 0000
