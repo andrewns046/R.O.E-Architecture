@@ -1,0 +1,269 @@
+begin:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 1011
+  slb $s1, 0001
+  redef 0111
+  sli $s1, 4
+  slb $s1, 1110
+  slb $s2, 1111
+loop:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 0011
+  redef 0110
+  lw $r0, $s0
+  redef 0111
+  addi $s0, 1
+  redef 0110
+  lw $r1, $s0
+  redef 0111
+  addi $s0, 1
+  redef 0010
+  redef 0100
+  or $p0, $p0, $r0
+  or $p1, $p1, $r1
+  sri $p0, 4
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 1001
+  or $q3, $p0, $p1
+  sli $p0, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r0
+  sli $p0, 4
+  sri $p0, 5
+  or $p1, $p1, $r0
+  sri $p1, 7
+  sli $p1, 3
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r1
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0101
+  redef 1001
+  or $q2, $q2, $p0 ! q2 = par bit 4 end page 1
+  redef 0100
+  sli $p0, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r1
+  sri $p0, 1
+  sli $p0, 6
+  or $p1, $p1, $r0
+  sli $p1, 1
+  sri $p1, 6
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  slb $p2, 1101
+  redef 0000
+  and $p1, $p1, $p2
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0101
+  redef 1001
+  or $q1, $q1, $p0 ! q1 = par bit 2
+  redef 0100
+  sli $p0, 8
+  sli $p2, 8
+  redef 0010
+  redef 1000
+  or $p0, $p0, $r1
+  sri $p0, 2
+  sli $p0, 7
+  or $p1, $p1, $r1
+  sli $p1, 7
+  sri $p1, 1
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  sli $p1, 1
+  sri $p1, 7
+  sli $p1, 5
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0 ! end page 2
+  sli $p1, 3
+  sri $p1, 7
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0 $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  slb $p2, 1011
+  redef 0000
+  and $p1, $p1, $p2
+  or $p0, $p0, $p1
+  ! begin xor_bits
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 4
+  sli $p0, 4
+  sri $p0, 4
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 2
+  sli $p0, 6
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  or $p1, $p0, $p1
+  sri $p1, 1
+  sli $p0, 7
+  sri $p0, 7
+  xor $p0, $p0, $p1
+  sli $p1, 8
+  ! end xor_bits
+  redef 0101
+  redef 1001
+  or $q0, $q0, $p0
+  redef 0100
+  sli $p0, 8
+  sli $p2, 8
+  redef 0001
+  redef 1000
+  or $p0, $p0, $q3
+  sli $p0, 7
+  or $p1, $p1, $q2
+  sli $p1, 3
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0001
+  or $p1, $p1, $q1
+  sli $p1, 1
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0001
+  or $p0, $p0, $q0
+  redef 0010
+  or $p1, $p1, $r0
+  sli $p1, 4
+  sri $p1, 5
+  sli $p1, 4
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r0
+  sli $p1, 7
+  sri $p1, 5 ! end page 3
+  redef 0000
+  or $p0, $p0, $p1
+  sli $p1, 8
+  redef 0010
+  or $p1, $p1, $r1
+  sli $p1, 4
+  or $p2, $p2, $r0
+  sri $p2, 4
+  redef 0000
+  or $p1, $p1, $p2
+  sli $p2, 8
+  redef 0011
+  sw $p0, $s1
+  redef 0111
+  addi $s1, 1
+  redef 0100
+  sw $p1, $s1
+  redef 0111
+  addi $s1, 1
+  redef 0100
+  sli $p0, 8
+  sli $p1, 8
+  redef 0101
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  redef 0111
+  subi $s2, 1
+  redef 0001
+  redef 0101
+  redef 1001
+  slb $q3, 0000
+  sli $q3, 4
+  slb $q3, 0001
+  redef 0111
+  bnz $s2, loop
+finished:
+  redef 0000
+  redef 0100
+  redef 1000
+  redef 1111

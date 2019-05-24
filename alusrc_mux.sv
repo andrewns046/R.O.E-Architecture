@@ -11,7 +11,7 @@ module alusrc_mux( input [1:0] alu_src,
 always_comb begin
   case( alu_src )
     2'b01: sel_o = to_ext;
-    2'b00: sel_o = to_inc + 1;
+    2'b00: sel_o = to_inc + 'd1;
     2'b10: sel_o = read0;
     default: sel_o = 'bz;
   endcase

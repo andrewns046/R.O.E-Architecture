@@ -84,19 +84,31 @@ void fec_encode( void ) {
 
   for(i = 0; i < PART_SIZE; i = i + 2) {
     //fec encoding algorithm
-    mem[i+PART_SIZE+1] = (mem[i+1] << 4) | (mem[i] >> 4);
 
-    par_bit8 = xor_bits( mem[i+PART_SIZE+1] );
-    par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) | ((mem[i] & 0x80) >> 4) |
+    par_bit8 = xor_bits( (mem[i+1] << 4) | (mem[i] >> 4) );
+
+    par_bit4 = xor_bits( ((mem[i] & 0x0E) >> 1) |
+                         ((mem[i] & 0x80) >> 4) |
                          (mem[i+1] << 4) );
+
     par_bit2 = xor_bits( ((mem[i+1] & 0x06 ) << 5) |
-                         ((mem[i] & 0x60) >> 1) | (mem[i] & 0x0D));
+                         ((mem[i] & 0x60) >> 1) |
+                         (mem[i] & 0x0D));
+
     par_bit1 = xor_bits( ((mem[i+1] & 0x04) << 5) |
-                         ((mem[i+1] & 0x01) << 6) | ((mem[i] & 0x40) >> 1) |
-                         (mem[i] & 0x10) | (mem[i] & 0x0B));
-    mem[i+PART_SIZE] = ( ((par_bit8 << 4) << 3) | ((mem[i] & 0x0E) << 3) |
-                                    (par_bit4 << 3) | ((mem[i] & 0x01) << 2) |
-                                    (par_bit2 << 1) | (par_bit1) );
+                         ((mem[i+1] & 0x01) << 6) |
+                         ((mem[i] & 0x40) >> 1) |
+                         (mem[i] & 0x10) |
+                         (mem[i] & 0x0B));
+
+    mem[i+PART_SIZE] = ( ((par_bit8 << 4) << 3) |
+                         ((mem[i] & 0x0E) << 3) |
+                         (par_bit4 << 3) |
+                         ((mem[i] & 0x01) << 2) |
+                         (par_bit2 << 1) |
+                         (par_bit1) );
+
+    mem[i+PART_SIZE+1] = (mem[i+1] << 4) | (mem[i] >> 4);
   }
 }
 
