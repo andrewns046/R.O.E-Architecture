@@ -39,7 +39,6 @@ initial begin
   for(int i=0; i < 16;i++) begin
     DUT.register_file.RF[i] = 0;
   end
-  /*
 // program 1
   for(int i=0;i<15;i++)	begin
     d1_in[i] = $random;              // create 15 messages
@@ -66,7 +65,7 @@ initial begin
     $displayb(DUT.dm1.core[30+2*i]);
     $display();
   end
-
+/*
 // program 2
 // generate parity from random 11-bit messages
   for(int i=0; i<15; i++) begin
@@ -93,7 +92,7 @@ initial begin
     $displayb(DUT.dm1.core[94+2*i]);
 	$display();
   end
-*/
+
 // program 3
 // pattern we are looking for; experiment w/ various values
   pat = 4'b0000;//4'b0101;//$random;
@@ -124,7 +123,7 @@ initial begin
 	str2 = str2<<1;
   end
 
-  #10ns reset = 1'b0;
+  // #10ns reset = 1'b0 uncomment for individual test
   #10ns req   = 1'b1;      // pulse request to DUT
   #10ns req   = 1'b0;
   wait(ack);               // wait for ack from DUT
@@ -134,6 +133,7 @@ initial begin
   $display("number of patterns w/o byte crossing    = %d %d",ctb,DUT.dm1.core[192]);   //160 max
   $display("number of bytes w/ at least one pattern = %d %d",cto,DUT.dm1.core[193]);   // 32 max
   $display("number of patterns w/ byte crossing     = %d %d",cts,DUT.dm1.core[194]);   //253 max
+*/
   #10ns $stop;
 end
 
