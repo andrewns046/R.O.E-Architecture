@@ -39,11 +39,16 @@ always_comb begin
 end
 
 always_ff @(posedge clk) begin
-  if (wen && ct == 0) begin // and clock on first pulse
+  /*$display("REG FILE CONTENTS:");
+  for(int i=0; i < 15; i++) begin
+    $display("RF[%d] = %d\n", i, RF[i]);
+  end
+*/
+  if (wen) begin // and clock on first pulse
 	  RF [write_addr] <= write_data;
-    ct <= 1;
+    //ct <= 1;
   end else begin
-    ct <= 0;
+    //ct <= 0;
   end
 end
 endmodule
