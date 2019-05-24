@@ -16,9 +16,11 @@ module InstROM #(parameter IW=16, DW=9)(
 // load machine code program into instruction ROM
   initial
   // test bench instructions
-	// $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/instruct_tb.txt", inst_rom);
+  // $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/instruct_tb.txt", inst_rom);
+  //test program 1
+  $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/machine_code_program1.txt", inst_rom);
   // test program 3
-  $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/machine_code_program3assembly.txt", inst_rom);
+  //$readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/machine_code_program3assembly.txt", inst_rom);
 
 
 // continuous combinational read output
