@@ -478,8 +478,9 @@ loop_prog2:
   redef 0111
   subi $s3, 1
   subi $s3, 8
-  redef 0000
   redef 1000
+  slb $p0, 1000
+  redef 0000
   slt $p0, $s3, $p0
   redef 0001
   redef 0101

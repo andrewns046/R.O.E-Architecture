@@ -351,6 +351,7 @@ loop_prog2:
   bnz $p0, decode
   subi $s3, 1
   subi $s3, 8
+  slb $p0, 1000
   slt $p0, $s3, $p0
   bnz $p0, mem0
   slb $r2, 0001
