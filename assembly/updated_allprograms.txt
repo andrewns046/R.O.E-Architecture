@@ -482,6 +482,8 @@ loop_prog2:
   slb $p0, 1000
   redef 0000
   slt $p0, $s3, $p0
+  redef 0100
+  xor $p0, $p0, $p1
   redef 0001
   redef 0101
   redef 1001

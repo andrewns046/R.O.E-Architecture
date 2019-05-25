@@ -353,6 +353,7 @@ loop_prog2:
   subi $s3, 8
   slb $p0, 1000
   slt $p0, $s3, $p0
+  xor $p0, $p0, $p1
   bnz $p0, mem0
   slb $r2, 0001
   bnz $p1, flipping
