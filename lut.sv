@@ -12,7 +12,8 @@ module lut #(parameter addr_i_w = 8, addr_o_w = 16)(
   // test bench lut
   // $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/lut_test.txt", lut_table);
   //$readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/lut_program1.txt", lut_table);
-  $readmemb("C:/Users/Matthew/Documents/GitHub/R.O.E-Architecture/assembly/lut_allprograms.txt", lut_table);
+  //$readmemb("C:/Users/Matthew/Documents/GitHub/R.O.E-Architecture/assembly/lut_allprograms.txt", lut_table);
+  $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/lut_allprograms.txt", lut_table);
   // lut program 3
   //$readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/lut_program3assembly.txt", lut_table);
 

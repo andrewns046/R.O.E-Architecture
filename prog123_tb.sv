@@ -35,8 +35,6 @@ logic[  7:0] mat_str[32];  // message string parsed into bytes
 prog DUT(.*);	           // replace "proc" with the name of your top level module
 
 initial begin
-
-  // pre fill register with 0
   for(int i=0; i < 16;i++) begin
     DUT.register_file.RF[i] = 0;
   end
@@ -70,6 +68,7 @@ initial begin
   for(int i=0; i < 16;i++) begin
     DUT.register_file.RF[i] = 0;
   end
+
 // program 2
 // generate parity from random 11-bit messages
   for(int i=0; i<15; i++) begin
@@ -79,9 +78,8 @@ initial begin
     p2 = d2_in[i][11]^d2_in[i][10]^d2_in[i][7]^d2_in[i][6]^d2_in[i][4]^d2_in[i][3]^d2_in[i][1];
     p1 = d2_in[i][11]^d2_in[i][ 9]^d2_in[i][7]^d2_in[i][5]^d2_in[i][4]^d2_in[i][2]^d2_in[i][1];
     d2_good[i] = {d2_in[i][11:5],p8,d2_in[i][4:2],p4,d2_in[i][1],p2,p1};
-    flip[i] = i;
+    flip[i] = $random;
     d2_bad[i] = d2_good[i] ^ (1'b1<<flip[i]);
-    $display("%d",flip[i]);
 	DUT.dm1.core[65+2*i] = {1'b0,d2_bad[i][15:9]};
     DUT.dm1.core[64+2*i] = {d2_bad[i][8:1]};
   end
@@ -101,23 +99,22 @@ initial begin
   for(int i=0; i < 16;i++) begin
     DUT.register_file.RF[i] = 0;
   end
+
 // program 3
 // pattern we are looking for; experiment w/ various values
   //pat = 4'b0000;
-  pat = 4'b1001;
-  $display("%b",pat);
+  //pat = 4'b0101;//
+  pat = $random;
   str2 = 0;
   DUT.dm1.core[160] = pat;
-  for(int i=0; i<32; i = i + 2) begin
+  for(int i=0; i<32; i++) begin
 // search field; experiment w/ various vales
-    //mat_str[i] = 8'b00000000;//// $random;
-    mat_str[i] = 8'b01001001;
-    mat_str[i+1] = 8'b11001010;
-    //mat_str[i] = $random;
+    //mat_str[i] = 8'b00000000;
+    //mat_str[i] = 8'b01010101; //
+    mat_str[i] = $random;
+
 	DUT.dm1.core[128+i] = mat_str[i];
-        DUT.dm1.core[128+i+1] = mat_str[i+1];
 	str2 = (str2<<8)+mat_str[i];
-        str2 = (str2<<8)+mat_str[i+1];
   end
   ctb = 0;
   for(int j=0; j<32; j++) begin
@@ -137,22 +134,15 @@ initial begin
     if(pat==str2[255:252]) cts++;
 	str2 = str2<<1;
   end
-
-  // #10ns reset = 1'b0 uncomment for individual test
   #10ns req   = 1'b1;      // pulse request to DUT
   #10ns req   = 1'b0;
   wait(ack);               // wait for ack from DUT
   $display();
   $display("start program 3");
   $display();
-  for(int i = 0;i<255;i = i + 4) begin
-    $display("mem[%3d]: %b mem[%3d]: %b mem[%3d]: %b mem[%3d]: %b ",i,DUT.dm1.core[i],i+1,DUT.dm1.core[i+1],i+2,DUT.dm1.core[i+2],i+3,DUT.dm1.core[i+3]);
-  end
-  $display();
   $display("number of patterns w/o byte crossing    = %d %d",ctb,DUT.dm1.core[192]);   //160 max
   $display("number of bytes w/ at least one pattern = %d %d",cto,DUT.dm1.core[193]);   // 32 max
   $display("number of patterns w/ byte crossing     = %d %d",cts,DUT.dm1.core[194]);   //253 max
-
   #10ns $stop;
 end
 

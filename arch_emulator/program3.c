@@ -100,6 +100,7 @@ int num_occur( u_byte pat, u_byte* str){
       if(j < 3) buf <<= 1;
     }
 
+
     //import lower half of str[i-1]
     buf = (buf | (str[i] & 0x0F));
     buf <<= 1;

@@ -21,8 +21,8 @@ module InstROM #(parameter IW=16, DW=9)(
   //$readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/machine_code_program1.txt", inst_rom);
   // test program 3
   //$readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/machine_code_program3assembly.txt", inst_rom);
-  $readmemb("C:/Users/Matthew/Documents/GitHub/R.O.E-Architecture/assembly/machine_code_allprograms.txt", inst_rom);
-
+  //$readmemb("C:/Users/Matthew/Documents/GitHub/R.O.E-Architecture/assembly/machine_code_allprograms.txt", inst_rom);
+  $readmemb("C:/Users/Tonik/Desktop/CSE141LEMU/assembly/machine_code_allprograms.txt", inst_rom);
 // continuous combinational read output
 //   change the pointer (from program counter) ==> change the output
   assign InstOut = inst_rom[InstAddress];
