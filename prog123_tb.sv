@@ -35,9 +35,7 @@ logic[  7:0] mat_str[32];  // message string parsed into bytes
 prog DUT(.*);	           // replace "proc" with the name of your top level module
 
 initial begin
-  for(int i=0; i < 16;i++) begin
-    DUT.register_file.RF[i] = 0;
-  end
+
 // program 1
   for(int i=0;i<15;i++)	begin
     d1_in[i] = $random;              // create 15 messages
@@ -65,10 +63,6 @@ initial begin
     $display();
   end
 
-  for(int i=0; i < 16;i++) begin
-    DUT.register_file.RF[i] = 0;
-  end
-
 // program 2
 // generate parity from random 11-bit messages
   for(int i=0; i<15; i++) begin
@@ -94,10 +88,6 @@ initial begin
     $writeb  (DUT.dm1.core[95+2*i]);
     $displayb(DUT.dm1.core[94+2*i]);
 	$display();
-  end
-
-  for(int i=0; i < 16;i++) begin
-    DUT.register_file.RF[i] = 0;
   end
 
 // program 3
