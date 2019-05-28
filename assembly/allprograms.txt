@@ -1,3 +1,20 @@
+reload1:
+  sli $p0, 8
+  sli $p1, 8
+  sli $p2, 8
+  sli $p3, 8
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  sli $r0, 8
+  sli $r1, 8
+  sli $r2, 8
+  sli $r3, 8
+  sli $s0, 8
+  sli $s1, 8
+  sli $s2, 8
+  sli $s3, 8
 prog1:
   slb $s1, 0001
   sli $s1, 4
@@ -196,6 +213,23 @@ loop_prog1:
   subi $s2, 1
   bnz $s2, loop_prog1
 finished1:
+reload2:
+  sli $p0, 8
+  sli $p1, 8
+  sli $p2, 8
+  sli $p3, 8
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  sli $r0, 8
+  sli $r1, 8
+  sli $r2, 8
+  sli $r3, 8
+  sli $s0, 8
+  sli $s1, 8
+  sli $s2, 8
+  sli $s3, 8
 prog2:
   slb $s0, 0100
   sli $s0, 4
@@ -422,6 +456,23 @@ decode:
   sri $p3, 8
   bnz $s2, loop_prog2
 finished2:
+reload3:
+  sli $p0, 8
+  sli $p1, 8
+  sli $p2, 8
+  sli $p3, 8
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  sli $r0, 8
+  sli $r1, 8
+  sli $r2, 8
+  sli $r3, 8
+  sli $s0, 8
+  sli $s1, 8
+  sli $s2, 8
+  sli $s3, 8
 num_occur_in:
   ! redef  [write][r's]
   slb  $r0, 1010 ! 0x0A
