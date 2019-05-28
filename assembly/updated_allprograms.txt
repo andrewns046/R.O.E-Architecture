@@ -1,3 +1,26 @@
+reload1:
+  redef 0000
+  redef 0100
+  redef 1000
+  sli $p0, 8
+  sli $p1, 8
+  sli $p2, 8
+  sli $p3, 8
+  redef 0101
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  redef 0110
+  sli $r0, 8
+  sli $r1, 8
+  sli $r2, 8
+  sli $r3, 8
+  redef 0111
+  sli $s0, 8
+  sli $s1, 8
+  sli $s2, 8
+  sli $s3, 8
 prog1:
   redef 0000
   redef 0100
@@ -263,15 +286,36 @@ loop_prog1:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 0001
+  slb $q3, 0010
   redef 0111
   bnz $s2, loop_prog1
 finished1:
   redef 0000
   redef 0100
   redef 1000
-  redef 1111
+reload2:
   redef 0000
+  redef 0100
+  redef 1000
+  sli $p0, 8
+  sli $p1, 8
+  sli $p2, 8
+  sli $p3, 8
+  redef 0101
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  redef 0110
+  sli $r0, 8
+  sli $r1, 8
+  sli $r2, 8
+  sli $r3, 8
+  redef 0111
+  sli $s0, 8
+  sli $s1, 8
+  sli $s2, 8
+  sli $s3, 8
 prog2:
   redef 0000
   redef 0100
@@ -472,7 +516,7 @@ loop_prog2:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 1011
+  slb $q3, 1101
   redef 0100
   bnz $p0, decode
   redef 0111
@@ -489,7 +533,7 @@ loop_prog2:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 0101
+  slb $q3, 0111
   redef 0100
   bnz $p0, mem0
   redef 1010
@@ -498,7 +542,7 @@ loop_prog2:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 0110
+  slb $q3, 1000
   redef 0100
   bnz $p1, flipping
 mem0:
@@ -523,7 +567,7 @@ flipping:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 0111
+  slb $q3, 1001
   redef 0100
   bnz $p0, notfour
   sli $p1, 4
@@ -542,7 +586,7 @@ notfour:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 1000
+  slb $q3, 1010
   redef 0100
   bnz $p0, nottwo
   sli $p1, 2
@@ -560,7 +604,7 @@ nottwo:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 1001
+  slb $q3, 1011
   redef 0100
   bnz $p0, notone
   sli $p1, 1
@@ -573,7 +617,7 @@ notone:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 1010
+  slb $q3, 1100
   redef 0110
   bnz $r2, mem1flip
   redef 0000
@@ -584,7 +628,7 @@ notone:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 1011
+  slb $q3, 1101
   redef 0100
   bnz $p2, decode
 mem1flip:
@@ -657,15 +701,36 @@ decode:
   redef 1001
   slb $q3, 0000
   sli $q3, 4
-  slb $q3, 0100
+  slb $q3, 0110
   redef 0111
   bnz $s2, loop_prog2
 finished2:
   redef 0000
   redef 0100
   redef 1000
-  redef 1111
+reload3:
   redef 0000
+  redef 0100
+  redef 1000
+  sli $p0, 8
+  sli $p1, 8
+  sli $p2, 8
+  sli $p3, 8
+  redef 0101
+  sli $q0, 8
+  sli $q1, 8
+  sli $q2, 8
+  sli $q3, 8
+  redef 0110
+  sli $r0, 8
+  sli $r1, 8
+  sli $r2, 8
+  sli $r3, 8
+  redef 0111
+  sli $s0, 8
+  sli $s1, 8
+  sli $s2, 8
+  sli $s3, 8
 num_occur_in:
   redef 0000
   redef 0100
@@ -708,7 +773,7 @@ L1:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 0001
+  slb $q3, 0100
   redef 0100
   bnz  $p1, END1
   ! redef  [write][r's]
@@ -733,7 +798,7 @@ L2:
   redef 0001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 0000
+  slb $q3, 0011
   bnz  $q1, NO_PAT1
   ! redef [write][r's]
   redef 0110
@@ -753,17 +818,17 @@ NO_PAT1:
   ! redef  [read0][some register]
   redef 0101
   redef 1001
-  slb $q3, 0000
+  slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1111
+  slb $q3, 0010
   redef 0100
   bnz  $p1, L2
   ! redef  [write][p's]
   addi  $p1, 1        ! $p0 = 1
   redef 0101
-  slb $q3, 0000
+  slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1110
+  slb $q3, 0001
   redef 0100
   bnz  $p1, L1
 END1:
@@ -811,7 +876,7 @@ L3:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 0110
+  slb $q3, 1001
   redef 0100
   bnz  $p1, END2
   ! redef  [write][r's]
@@ -841,7 +906,7 @@ L4:
   redef 0101
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 0101
+  slb $q3, 1000
   bnz  $q1, NO_PAT2    ! if( temp != 0)
   ! redef [write][r's]
   redef 0110
@@ -854,7 +919,7 @@ L4:
   redef 0101
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 0011
+  slb $q3, 0110
   redef 0111
   bnz  $s2, L3
 NO_PAT2:
@@ -872,7 +937,7 @@ NO_PAT2:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 0100
+  slb $q3, 0111
   redef 0100
   bnz  $p1, L4
   ! redef  [write][p's]
@@ -880,7 +945,7 @@ NO_PAT2:
   redef 0101
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 0011
+  slb $q3, 0110
   redef 0100
   bnz  $p1, L3
 END2:
@@ -942,7 +1007,7 @@ L5:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1010
+  slb $q3, 1101
   redef 0111
   bnz  $s0, L6         ! If j turns to 5 this will branch
   ! redef  [read1][q's]
@@ -965,7 +1030,7 @@ L5:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1001
+  slb $q3, 1100
   redef 0111
   bnz  $s0, PAT_CHECK
   ! redef [write][q's]
@@ -984,7 +1049,7 @@ PAT_CHECK:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1000
+  slb $q3, 1011
   bnz  $q1, L5  ! if (temp != 0x00) branch
   ! redef  [write][r's]
   redef 0110
@@ -994,7 +1059,7 @@ PAT_CHECK:
   redef 0101
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1000
+  slb $q3, 1011
   redef 0110
   bnz  $r2, L5  ! This will always branch to L5 b/c j condition up there
 L6:
@@ -1011,7 +1076,7 @@ L6:
   redef 1001
   slb $q3, 0010
   sli $q3, 4
-  slb $q3, 0000
+  slb $q3, 0011
   redef 0111
   bnz  $s0, END3
   redef 0010
@@ -1040,9 +1105,9 @@ L7:
   slt  $s0, $q2, $r1     ! if ( 3 < j )
   redef 0001
   redef 1001
-  slb $q3, 0001
+  slb $q3, 0010
   sli $q3, 4
-  slb $q3, 1101
+  slb $q3, 0000
   redef 0111
   bnz  $s0, PRE_L8 ! branch when j = 4
   ! redef  [write][q's]
@@ -1066,7 +1131,7 @@ L7:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1100
+  slb $q3, 1111
   redef 0111
   bnz  $s0, PAT_CHECK1  ! don't skip over next line until j is 3
   ! redef  [write][q's]
@@ -1085,7 +1150,7 @@ PAT_CHECK1:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1011
+  slb $q3, 1110
   bnz  $q1, L7  ! if (temp != 0x00) branch
   ! redef  [write][r's]
   redef 0110
@@ -1095,7 +1160,7 @@ PAT_CHECK1:
   redef 0101
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1011
+  slb $q3, 1110
   redef 0110
   bnz  $r2, L7  ! This will always branch to L5 b/c j condition up there
 PRE_L8:
@@ -1129,7 +1194,7 @@ L8:
   redef 1001
   slb $q3, 0001
   sli $q3, 4
-  slb $q3, 1010
+  slb $q3, 1101
   redef 0111
   bnz  $s0, L6           ! branch when j = 4
   redef 0000
@@ -1143,9 +1208,9 @@ L8:
   redef 0001
   redef 0101
   redef 1001
-  slb $q3, 0001
+  slb $q3, 0010
   sli $q3, 4
-  slb $q3, 1111
+  slb $q3, 0010
   redef 0111
   bnz  $s0, PAT_CHECK2  ! don't skip over next line until j is 3
   redef 0101
@@ -1159,16 +1224,16 @@ PAT_CHECK2:
   redef 0001
   redef 0101
   redef 1001
-  slb $q3, 0001
+  slb $q3, 0010
   sli $q3, 4
-  slb $q3, 1110
+  slb $q3, 0001
   bnz  $q1, L8  ! if (temp != 0x00) branch
   redef 0110
   addi  $r2, 1  ! cnt++
   redef 0101
-  slb $q3, 0001
+  slb $q3, 0010
   sli $q3, 4
-  slb $q3, 1110
+  slb $q3, 0001
   redef 0110
   bnz  $r2, L8  ! This will always branch to L5 b/c j condition up there
 END3:
@@ -1185,4 +1250,3 @@ finished3:
   redef 0100
   redef 1000
   redef 1111
-  redef 0000
