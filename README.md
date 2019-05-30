@@ -1,6 +1,6 @@
 # R.O.E-Architecture
 Running On Empty is a 9 bit Architecture designed to perform fec encoding/decoding and bit pattern searches. Below is the final architecture's datapath schematic:
-![alt text](https://raw.githubusercontent.com/tonikhd/R.O.E-Architecture/master/roearchv9.PNG)
+![alt text](https://raw.githubusercontent.com/tonikhd/R.O.E-Architecture/master/roearchv9.png)
 
 # ISA Table
 Below is R.O.E's instruction set inspired by MIPS reg to reg architecture:
