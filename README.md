@@ -105,6 +105,10 @@ bnz $p0, labelnospace
     
 16. Register values are not set to a specific value by default.
 
+17. Immediate operations must be written in decimal format, ex:
+`sli $p0, 4`
+    the compiler will replace this with an appropriate binary value in the machine code.
+
 # Tests
 The test folder contains a test bench that tests each instruction in our ISA works properly with the the architecture's SystemVerilog code i.e the purpose of this test bench was to ensure the synthesized hardware works.
 
