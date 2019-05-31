@@ -30,20 +30,33 @@ Assembly files are written in plaintext (.txt files) and there are a few syntax 
 1. Labels must be written without preceding whitespace.
 2. Whitespace and colons (:) are invalid characters in a label.
 3. Labels must be followed by an immediate colon (:) as such:
+
     label:
+    
 4. Operations must be preceded by two spaces.
 5. Valid registers are $\[p,q,r,s]\[0,1,2,3], examples of valid registers:
+
     $p0
+    
     $r2
+    
     $q1
+    
 6. Operation names must be followed by whitespace only:
+
     Valid:
+    
           addi $p0, 5
+          
     Invalid:
+    
           addi, $p0, 5
+          
 7. Operants are followed by a comma unless they are the final operant; see above.
 8. Comments are preceded by an exclamation mark and a space, example:
+
     ! This is a comment
+    
 9. Comments may be written with no indent, with the same indent as an operation (2 spaces preceding the exclamation mark),
    or after an operation. Example code, with comments:
  
