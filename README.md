@@ -48,19 +48,30 @@ Assembly files are written in plaintext (.txt files) and there are a few syntax 
    or after an operation. Example code, with comments:
  
 labelnospace:
+
   ! Two preceding spaces
+  
   addi $p0, 5
+  
   subi $p2, 5 ! Comment following an operation
+  
 ! No preceding spaces
+
   redef 0101 ! Code continues, two white spaces preceding
+  
 
 10. Blank lines are not allowed; if you wish to add visual space in your assembly code, place an exclamation mark at the 
     beginning of the line:
+    
 ! This is a comment, below is a valid empty line
+
 !
+
 ! This is a comment, below is not a valid empty line
 
+
 ! The above line will break the compiler :*(
+
 
 
 
