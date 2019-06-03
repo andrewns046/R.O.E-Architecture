@@ -293,6 +293,8 @@ finished1:
   redef 0000
   redef 0100
   redef 1000
+  redef 1111
+  redef 0000
 reload2:
   redef 0000
   redef 0100
@@ -708,6 +710,8 @@ finished2:
   redef 0000
   redef 0100
   redef 1000
+  redef 1111
+  redef 0000
 reload3:
   redef 0000
   redef 0100
@@ -1250,3 +1254,4 @@ finished3:
   redef 0100
   redef 1000
   redef 1111
+  redef 0000
