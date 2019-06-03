@@ -198,6 +198,13 @@ for line in assembly_file:
         update_decodes("1000")
         lines_to_insert.append(("  redef 1000\n",current_line))
         current_line += 1
+        if(split[0].partition(":")[0] == "finished1" or
+           split[0].partition(":")[0] == "finished2" or
+           split[0].partition(":")[0] == "finished3"):
+            lines_to_insert.append(("  redef 1111\n",current_line))
+            current_line += 1
+            lines_to_insert.append(("  redef 0000\n",current_line))
+            current_line += 1
     elif(line[0] == ' ' and line[2] != '!'):
         split = line.split()
         if(split[0] == "slb"):
@@ -231,7 +238,7 @@ for line in assembly_file:
         current_line += 1
     else:
         current_line += 1
-lines_to_insert.append(("  redef 1111\n",current_line))
+
 assembly_file.close()
 assembly_file = open(program_path,'r')
 updated_contents = assembly_file.readlines()
