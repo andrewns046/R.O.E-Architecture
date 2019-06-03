@@ -2,19 +2,21 @@
 Running On Empty is a 9 bit Architecture designed to perform fec encoding/decoding and bit pattern searches. Below is the final architecture's datapath schematic:
 ![alt text](https://raw.githubusercontent.com/tonikhd/R.O.E-Architecture/master/roearchv9.png)
 
+Quartus Generated Schematic file: roearch_top.svo
+
 # ISA Table
 Below is R.O.E's instruction set inspired by MIPS reg to reg architecture:
 ![alt text](https://raw.githubusercontent.com/tonikhd/R.O.E-Architecture/master/isatable.PNG)
 
 # Emulator Files
 This emulator was created to solidify the fec encoder/decoder and bit pattern searching algorithms. Inside the arch_emulator folder you will find two C programs:
-  
+
   program1.c (fec encoder/decoder)
-  
+
     - requires program1_2_results.txt(console output from SystemVerilog fec encoder/decoder)  
-  
+
   program3.c (bit pattern search)
-    
+
 # Assembly Files
 Assembly files for fec encoding/decoding and bit pattern searches are found in the assembly folder(program1.txt, program2.txt, program3.txt). In the assembly folder you will also find compiled machine code of the programs with the header "machine_code" followed by an underscore and the program name.(See compiler section for more details)
 
@@ -43,21 +45,21 @@ Assembly files are written in plaintext (.txt files) and there are a few syntax 
 6. Operation names must be followed by whitespace only:
 
     Valid:
-    
+
           addi $p0, 5
-          
+
     Invalid:
-    
+
           addi, $p0, 5
-          
+
 7. Operants are followed by a comma unless they are the final operant; see above.
 8. Comments are preceded by an exclamation mark and a space, example:
 
     ! This is a comment
-    
+
 9. Comments may be written with no indent, with the same indent as an operation (2 spaces preceding the exclamation mark),
    or after an operation. Example code, with comments:
-``` 
+```
 labelnospace:
   ! Two preceding spaces
   addi $p0, 5
@@ -66,7 +68,7 @@ labelnospace:
   redef 0101 ! Code continues, two white spaces preceding
 ```
 
-10. Blank lines are not allowed; if you wish to add visual space in your assembly code, place an exclamation mark at the 
+10. Blank lines are not allowed; if you wish to add visual space in your assembly code, place an exclamation mark at the
     beginning of the line:
 ```    
 ! This is a comment, below is a valid empty line
@@ -90,7 +92,7 @@ bnz $p0, labelnospace
 ```
 13. The compiler uses register `$q3` to hold the conversion from a label to a line-based target. It is advised that you
     do not use this register if possible, because its contents will be erased every time a branch instruction is encountered
-    whether or not the branch is taken. 
+    whether or not the branch is taken.
 
 14. With a single assembly program, the compiler will automatically insert an operation at the bottom of the code to signal
     that the program is finished. This operation is always:
@@ -102,13 +104,13 @@ bnz $p0, labelnospace
     write, especially when you write several programs in one file. The compiler inserts a series of `redef` operations
     after every label to ensure that program behavior is consistent when a label is reached, whether or not the label was
     branched to. Branches would otherwise create unpredictable `redef` usage.
-    
+
 16. Register values are not set to a specific value by default.
 
 17. Immediate operations must be written in decimal format, ex:
 `sli $p0, 4`
     the compiler will replace this with an appropriate binary value in the machine code.
-    
+
 All other compiler quirks and necessary information will be updated here as it is remembered by the author.
 
 # Tests
@@ -131,7 +133,3 @@ This file contains line numbers (in binary) that the compiler determined and sto
 This file contains machine code that will fire the programs in the test bench.
 
 3. Finally, in Modelsim, compile all .sv files in the top level directory and load program123_tb.sv. Hit "run all" and look for the output in the console/transcript.
-
-
-
-
